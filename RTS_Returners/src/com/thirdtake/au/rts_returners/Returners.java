@@ -8,6 +8,7 @@ package com.thirdtake.au.rts_returners;
 public class Returners {
 	
 	public static final String BUILD_ID = "v0.1";
+	public static final String BUILD_NAME = "Returners";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
