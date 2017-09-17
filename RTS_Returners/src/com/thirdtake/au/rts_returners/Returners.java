@@ -10,8 +10,22 @@ public class Returners {
 	public static final String BUILD_ID = "v0.1";
 	public static final String BUILD_NAME = "Returners";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		System.out.println("RTS_Returners starting...");
+		System.out.println(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
+		
+		int time = 10; //Seconds
+		
+		while(time > 0){
+			Thread.sleep(1000L);
+			time--;
+		}
+		
+		Stop();
+		
+	}
+	
+	public static void Stop(){
+		System.out.println(BUILD_NAME + " finished.");
 	}
 }
