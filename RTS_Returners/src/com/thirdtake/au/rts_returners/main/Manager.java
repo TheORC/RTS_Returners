@@ -6,10 +6,13 @@ import java.awt.Color;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.Game;
 import com.Tylabobaid.Centaur.Main.Main;
+import com.thirdtake.au.rts_returners.enums.GameStates;
 
 public class Manager extends Main{ //This Class must extend Manager
 	
 	static Manager man = new Manager(); //This line is necissary for setup
+	public static GameStates gameState = GameStates.INGAME;
+	public static InGameManager inGameManager = new InGameManager();
 	
 	public static void main(String[] args) { //This is what starts the java program
 		Game.startGame(man); //This starts the Game
@@ -18,20 +21,23 @@ public class Manager extends Main{ //This Class must extend Manager
 	@Override
 	public void initialise() { //This runs once when first started
 		
-		setMultithreaded(true); //decides whether or not to use different threads for the rendering and ticking
+		setMultithreaded(false); //decides whether or not to use different threads for the rendering and ticking
 		//note, the thread pool can still be used while this is set the false
+		//Set to false to remove screen tearing type of issues
 		
 		//The size of the inbuilt Thread Pool can be set,
 		// USING: setThreadPoolSize(sizw); //default is 2
 		
 		setAudioPlaying(true); //determines if audio should play, default is false
 		
-		setWindowWidth(1920); //Default is 1280
-		setWindowHeight(1080); //Default is 720
+		setWindowWidth(1280); //Default is 1280
+		setWindowHeight(720); //Default is 720
 		
-		setWindowTitle("Title"); //Default is "Centaur Engine"
+		setWindowTitle("Returners: The RTS"); //Default is "Centaur Engine"
 		
 		setTargetFPS(120); //Default is 60
+		
+//		Keyinput.showingKeyPresses(true);
 	}
 	
 	@Override
@@ -40,7 +46,10 @@ public class Manager extends Main{ //This Class must extend Manager
 		//Graphics Engine automatically scales the screen resolution from 1280 x 720. This resolution should be used for testing.
 		
 		//For Example:
-		GraphicsEngine.renderBackground(Color.BLUE);
+		GraphicsEngine.renderBackground(Color.white);
+		if(gameState == GameStates.INGAME){
+			inGameManager.render();
+		}
 	}
 	
 	@Override
@@ -79,5 +88,9 @@ public class Manager extends Main{ //This Class must extend Manager
 			//} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			//	e.printStackTrace();
 			//}
+		
+		if(gameState == GameStates.INGAME){
+			inGameManager.tick();
+		}
 	}
 }
