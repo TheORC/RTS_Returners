@@ -5,10 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message;
-import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message.Builder;
-import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message.MessageType;
+import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.utils.Debug;
 
 /**
@@ -25,7 +23,7 @@ public class ServerSocket {
 	private InetAddress m_Host = null;
 	
 	/**
-	 * @param ip - The ip of the server being connected to.
+	 * @param ip - The IP of the server being connected to.
 	 * @param port - The port which the server is listening on.
 	 */
 	public ServerSocket(String ip, int port){
@@ -38,7 +36,10 @@ public class ServerSocket {
 			this.m_Socket = new DatagramSocket();
 			this.m_Host = InetAddress.getByName(m_IP);
 			
+			Debug.Log("Begining handshake...");
 			HandShake();
+			
+			Debug.Log("Waiting for a response...");
 			Listener();
 
 		} catch (IOException e) {
@@ -51,42 +52,12 @@ public class ServerSocket {
 	 * @throws IOException 
 	 */
 	private void HandShake() throws IOException{
-		
-		Debug.Log("Begining handshake...");
-		
 		/*
-		 * Use protobuf to compile a login message.
-		 */		
-		
-		Builder mB = Message.newBuilder(); //Create a new instance of 'Message' class.
-		mB.setSenderID(-1); //Set the sender.
-							//Be default this will set to -1, as the sender has no id.
-		mB.setMessageType(MessageType.LOGIN); //Set the type of message.
-		mB.addIntVars(999999999);
-		
-		Message _M = mB.build(); //Construct the message. 
-		
-		byte[] _mMessage = _M.toByteArray(); //Convert the message into a byte[].
-		
-		if(_mMessage.length > 100)
-			Debug.LogError("Message sizes are exceeding 100 bytes!  The server is not built to handle this");
-		
-		com.thirdtake.au.rts_returners.main.Server.NetMessage.Header.Builder mHB = Header.newBuilder();
-		mHB.setMessageLength(_mMessage.length);
-				
-		Header _H = mHB.build();
-		
-		byte[] _mHeader = _H.toByteArray();
-		
-		byte[] _message = new byte[_mHeader.length + _mMessage.length];
-		System.arraycopy(_mHeader, 0, _message, 0, _mHeader.length);
-		System.arraycopy(_mMessage, 0, _message, _mHeader.length, _mMessage.length);
-
-		
-		Debug.Log("Header size: " + _mHeader.length + " Message size: " + _message.length);
-		
-		DatagramPacket _packet = new DatagramPacket(_message, _message.length, m_Host, m_PORT); //Construct the message to be sent.
-		m_Socket.send(_packet); //Send the packet.
+		 * Use ProtoBuf to compile a login message.
+		 */
+		byte[] _HandShakeBytes = MessageCreator.CreateMessage(MessageType.LOGIN, null);                       //Create a handshake message.
+		DatagramPacket _packet = new DatagramPacket(_HandShakeBytes, _HandShakeBytes.length, m_Host, m_PORT); //Construct the message to be sent.
+		m_Socket.send(_packet);                                                                               //Send the packet.
 	}
 	
 	/**
@@ -95,29 +66,48 @@ public class ServerSocket {
 	 */
 	private void Listener() throws IOException{
 		while(true){
-			Debug.Log("Waiting for a response...");
-			//now receive reply
+			//Now receive reply
             //buffer to receive incoming data
-            byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[1024];
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-            m_Socket.receive(reply);
+            m_Socket.receive(reply);  //The code pauses here until a message is received.
             
-            byte[] headerBytes = new byte[2];
-            System.arraycopy(buffer, 0, headerBytes, 0, headerBytes.length);
+            NetworkMessage message = new NetworkMessage(buffer); //Get the encoded messages.
             
-            Header header = Header.parseFrom(headerBytes);
+            //Debug.Log("Received message from the server!");
+            //Debug.Log("Send by: " + message.SenderID() + " Message type: " + message.MessageType());
             
-            int messageLength = header.getMessageLength();
-            
-            byte[] messageBytes = new byte[messageLength];
-            System.arraycopy(buffer, headerBytes.length, messageBytes, 0, messageLength);
-                        
-            Message _Message = Message.parseFrom(messageBytes);
-            Debug.Log("Received message from the server!");
-            Debug.Log("Send by: " + _Message.getSenderID() + " Message type: " + _Message.getMessageType());
-            
-            Debug.Log("Id: " + _Message.getIntVars(0));
-            Debug.Log("Seed: " + _Message.getIntVars(1));
+            //The only time login gets called is when the server send us back information.
+            //This is must be trying to send important information.
+            if(message.MessageType() == MessageType.LOGIN){  
+            	int clientID = message.GetMessage().getIntVars(0);  //Get the id the server sent
+            	int worldSeed = message.GetMessage().getIntVars(1); //Get the world seed
+            	
+            	LocalClient.ID = clientID;
+            	
+            	Debug.Log("Received login detials from the server!");
+            	Debug.Log("Client ID: " + clientID);
+            	Debug.Log("World seed: " + worldSeed);
+            	
+            	SendTestRPC();
+            } 
+		}
+	}
+	
+	private void SendTestRPC(){
+		
+		Message.Builder ms = Message.newBuilder();
+		for(int i = 0; i < 100; i++)
+			ms.addIntVars(i);
+		
+		byte[] information = ms.build().toByteArray();
+		byte[] _packetBytes  = MessageCreator.CreateMessage(MessageType.RPC, information);
+		
+		DatagramPacket _packet = new DatagramPacket(_packetBytes, _packetBytes.length, m_Host, m_PORT);
+		try {
+			m_Socket.send(_packet);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
