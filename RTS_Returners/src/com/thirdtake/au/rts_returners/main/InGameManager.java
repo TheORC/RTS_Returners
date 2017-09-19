@@ -8,6 +8,7 @@ import com.Tylabobaid.Centaur.Events.MouseInput;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.PerlinNoise;
 import com.Tylabobaid.Centaur.Main.Vector;
+import com.thirdtake.au.rts_returners.Buildings.Building;
 import com.thirdtake.au.rts_returners.enums.TileTypes;
 import com.thirdtake.au.rts_returners.map.Tile;
 
@@ -20,7 +21,7 @@ public class InGameManager {
 	private BufferedImage HDMapImage; //HD version of the map
 	
 	Vector cameraOffset = new Vector(); //Vector that determines the position of the camera
-	Vector screenCenter = new Vector();
+	Vector displayCorner = new Vector();
 	
 	int mapSize = 256; //width/ height of the map (in tiles)
 	int mapSeed = 420420; //seed used to generate the map
@@ -34,13 +35,21 @@ public class InGameManager {
 	int selectedTileX = 0; //The tile that the mouse is hovering over
 	int selectedTileY = 0;
 	
-	int hudX; //X- coordinate of the HUD (set when ticking the camera)
-	int hudY; //Y- coordinate of the HUD (set when ticking the camera)
+	int hudX = 10; //X- coordinate of the HUD (set when ticking the camera)
+	int hudY = 10; //Y- coordinate of the HUD (set when ticking the camera)
+	
 	int scaledScreenWidth; //Width of box shown on minimap (set when ticking the camera)
 	int scaledScreenHeight; //height of box shown on minimap (set when ticking the camera)
 	int minimapScale = 1; //Factor used to scale up/down minimap size
 	
 	int HDScale = 5; //Facor used to increase quality of map
+	
+	int leftBorder;
+	int rightBorder;
+	int topBorder;
+	int bottomBorder;
+	
+	private Building mouseBuilding = null;
 	
 	public InGameManager(){
 		noise = new PerlinNoise(mapSeed); //initialises the Perlin Noise Used
@@ -144,18 +153,48 @@ public class InGameManager {
 
 	public void tick(){
 		tickCamera(); //Performs all Camera Calculations
+		tickTiles();
+	}
+
+	private void tickTiles() {
+		if(MouseInput.leftClick() && mouseInsideWindow()){
+			if(mouseBuilding != null){
+				if(selectedTileX >= 0 && selectedTileX < tiles.length){
+					if(selectedTileY >= 0 && selectedTileY < tiles[0].length){
+						tiles[selectedTileX][selectedTileY].build(mouseBuilding);
+						
+						//remove required materials here
+						
+						mouseBuilding = null;
+					}
+				}
+			}
+		}
+		
+		for(int x = 0; x < tiles.length; x++){
+			for(int y = 0; y < tiles[0].length; y ++){
+				tiles[x][y].tickBuilding();
+			}
+		}
+	}
+
+	private boolean mouseInsideWindow() {
+		return (MouseInput.getMouseX() >= leftBorder && MouseInput.getMouseX() <= rightBorder && MouseInput.getMouseY() >= topBorder && MouseInput.getMouseY() <= bottomBorder);
 	}
 
 	public void tickCamera(){
-		screenCenter = new Vector(GraphicsEngine.getWidth()/2, GraphicsEngine.getHeight()/2); //Sets to the Center of the screen (for rendering Purposes)
+		
+		leftBorder = mapSize*minimapScale+20;
+		rightBorder = GraphicsEngine.getWidth()-10;
+		topBorder = 10;
+		bottomBorder = GraphicsEngine.getHeight()-10;
+		
+		displayCorner = new Vector(leftBorder, topBorder); //Sets to the Center of the screen (for rendering Purposes)
 		cameraTileX = (int) Math.floor(cameraOffset.getX()/tileSize); //Sets the current tile of the Camera
 		cameraTileY = (int) Math.floor(cameraOffset.getY()/tileSize);
 		
-		hudX = 10;
-		hudY = GraphicsEngine.HEIGHT-(mapSize*minimapScale)-10; //May Require Tweaking
-		
-		scaledScreenWidth = (int) (minimapScale*screenCenter.getX()*2/tileSize); //sets the size of the screen shown on the minimap
-		scaledScreenHeight = (int) (minimapScale*screenCenter.getY()*2/tileSize);
+		scaledScreenWidth = (int) (minimapScale*(rightBorder-leftBorder)/tileSize); //sets the size of the screen shown on the minimap
+		scaledScreenHeight = (int) (minimapScale*(bottomBorder-topBorder)/tileSize);
 		
 		//Checking Arrow keys to move Camera
 		if(Keyinput.getkey(38)){ //UP
@@ -173,112 +212,112 @@ public class InGameManager {
 		}
 		
 		//Ensuring that the Camera stays on the map
-		while(cameraOffset.getX() < screenCenter.getX()){
+		while(cameraOffset.getX()-(leftBorder/tileSize)+10 < 0){
 			cameraOffset = new Vector(cameraOffset.getX() + 1, cameraOffset.getY());
 		}
-		while(cameraOffset.getX() > (tiles.length*tileSize)-screenCenter.getX()){
+		while(cameraOffset.getX()+(rightBorder-leftBorder) > (tiles.length*tileSize)){
 			cameraOffset = new Vector(cameraOffset.getX() - 1, cameraOffset.getY());
 		}
-		while(cameraOffset.getY() < screenCenter.getY()){
+		while(cameraOffset.getY()-(topBorder/tileSize) < 0){
 			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() + 1);
 		}
-		while(cameraOffset.getY() > (tiles[0].length*tileSize)-screenCenter.getY()){
+		while(cameraOffset.getY()+(bottomBorder-topBorder) > (tiles[0].length*tileSize)){
 			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - 1);
 		}
 				
 		if(MouseInput.getMouseX() >= hudX && MouseInput.getMouseX() <= hudX + mapSize*minimapScale){ //When the mouseX is within the minimap
 			if(MouseInput.getMouseY() >= hudY && MouseInput.getMouseY() <= hudY + mapSize*minimapScale){ //When the mouseY is within the minimap
 				if(MouseInput.leftClick()){
-					cameraOffset = new Vector(tileSize*(MouseInput.getMouseX()/minimapScale)-hudX, tileSize*(MouseInput.getMouseY()-hudY)/minimapScale);
+					cameraOffset = new Vector((tileSize*(MouseInput.getMouseX()/minimapScale)-hudX)-((rightBorder-leftBorder)/2), (((tileSize*MouseInput.getMouseY())/minimapScale)-hudY)-((bottomBorder-topBorder)/2));
 				}
 			}
 		}
-		selectedTileX = (int) Math.floor((MouseInput.getMouseX()-screenCenter.getX()+cameraOffset.getX())/tileSize);
-		selectedTileY = (int) Math.floor((MouseInput.getMouseY()-screenCenter.getY()+cameraOffset.getY())/tileSize);
-	
-		//Checking Mouse Position to move Camera
-		int deltaX = GraphicsEngine.WIDTH-MouseInput.getMouseX(); //Distance from mouse to right side of the screen
-		int deltaY = GraphicsEngine.HEIGHT-MouseInput.getMouseY(); //Distance from the mouse to bottom of the screen
 		
-		if(MouseInput.getMouseY() <= borderWidth){ //UP
-			int speed = cameraMaxMovementSpeed-((MouseInput.getMouseY()*cameraMaxMovementSpeed)/borderWidth);
-			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - speed); //Moves Camera UP
+		if(mouseInsideWindow()){
+			selectedTileX = (int) Math.floor((MouseInput.getMouseX()-displayCorner.getX()+cameraOffset.getX())/tileSize);
+			selectedTileY = (int) Math.floor((MouseInput.getMouseY()-displayCorner.getY()+cameraOffset.getY())/tileSize);	
+		}else{
+			selectedTileX = -1;
+			selectedTileY = -1;
 		}
-		if(deltaY <= borderWidth){ //DOWN
-			int speed = cameraMaxMovementSpeed-((deltaY*cameraMaxMovementSpeed)/borderWidth);
-
-			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() + speed); //Moves Camera Down
-		}
-				
-		if(MouseInput.getMouseX() <= borderWidth){ //LEFT
-			int speed = cameraMaxMovementSpeed-((MouseInput.getMouseX()*cameraMaxMovementSpeed)/borderWidth);
-			cameraOffset = new Vector(cameraOffset.getX() - speed, cameraOffset.getY()); //Moves Camera LEFT
-		}
-		if(deltaX <= borderWidth){ //DOWN
-			int speed = cameraMaxMovementSpeed-((deltaX*cameraMaxMovementSpeed)/borderWidth);
-			cameraOffset = new Vector(cameraOffset.getX() + speed, cameraOffset.getY()); //Moves Camera RIGHT
+		
+		//Checking Mouse Position to move Camera
+		if(mouseInsideWindow()){
+			int deltaX = rightBorder - MouseInput.getMouseX(); //Distance from mouse to right side of the screen
+			int deltaY = bottomBorder-MouseInput.getMouseY(); //Distance from the mouse to bottom of the screen
+			
+			if(MouseInput.getMouseY() <= topBorder+borderWidth){ //UP
+				int speed = cameraMaxMovementSpeed-(((MouseInput.getMouseY()-topBorder)*cameraMaxMovementSpeed)/borderWidth);
+				cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - speed); //Moves Camera UP
+			}
+			if(deltaY <= borderWidth){ //DOWN
+				int speed = cameraMaxMovementSpeed-((deltaY*cameraMaxMovementSpeed)/borderWidth);
+				cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() + speed); //Moves Camera Down
+			}
+					
+			if(MouseInput.getMouseX() <= leftBorder+borderWidth){ //LEFT
+				int speed = cameraMaxMovementSpeed-(((MouseInput.getMouseX()-leftBorder)*cameraMaxMovementSpeed)/borderWidth);
+				cameraOffset = new Vector(cameraOffset.getX() - speed, cameraOffset.getY()); //Moves Camera LEFT
+			}
+			if(deltaX <= borderWidth){ //RIGHT
+				int speed = cameraMaxMovementSpeed-((deltaX*cameraMaxMovementSpeed)/borderWidth);
+				cameraOffset = new Vector(cameraOffset.getX() + speed, cameraOffset.getY()); //Moves Camera RIGHT
+			}
+		
 		}
 	}
 	
 	public void render(){
-//		renderBackground();
 		renderBackgroundImgage();
+		renderBuildings();
 		renderHUD();
 	}
 	
-	private void renderBackgroundImgage() { //renders the background as an image
-		GraphicsEngine.renderImage(HDMapImage,(int) (-cameraOffset.getX()+screenCenter.getX()),(int) (-cameraOffset.getY()+screenCenter.getY()), mapSize*tileSize, mapSize*tileSize);
-	
-		if(selectedTileX >= 0 && selectedTileX < tiles.length){
-			if(selectedTileY >= 0 && selectedTileY < tiles[0].length){
-				if(tiles[selectedTileX][selectedTileY].getCanBuild()){
-					GraphicsEngine.setColor(new Color(0,255,0,100));
-				}else{
-					GraphicsEngine.setColor(new Color(255,0,0,100));
-				}
-				GraphicsEngine.rect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+screenCenter.getX()),(int) ((selectedTileY*tileSize)-cameraOffset.getY()+screenCenter.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
-
-				GraphicsEngine.setColor(new Color(255,255,255));
-				GraphicsEngine.outLineRect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+screenCenter.getX()),(int) ((selectedTileY*tileSize)-cameraOffset.getY()+screenCenter.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
-	
-				GraphicsEngine.setColor(new Color(0,0,0));
-				GraphicsEngine.outLineRect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+screenCenter.getX()) -1,(int) ((selectedTileY*tileSize)-cameraOffset.getY()+screenCenter.getY()) -1, tileSize+2, tileSize+2); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
-
-			}
-		}
-	}
-
-	public void renderBackground(){ //renders the background as a grid of squares
-		//Drawing Background
+	private void renderBuildings() {
 		int tileRadius = renderRadius/tileSize; //Radius of Tiles that will be rendered
 		for(int xx = -tileRadius; xx < tileRadius; xx ++){ //Loops through all tiles on the screen that are within the Radius
 			for(int yy = -tileRadius; yy < tileRadius; yy ++){
 				int x = xx+cameraTileX;
 				int y = yy+cameraTileY;
-						
 				if(x >= 0 && x < tiles.length){ //Checks for null-pointer errors (trying the draw tiles that don't exist)
 					if(y >= 0 && y < tiles[0].length){
-						if(tiles[x][y].getType() == TileTypes.GROUND){ //These Colours are placeholders, will be replaced by sprites
-							GraphicsEngine.setColor(new Color(0,100,0));
-						}else if(tiles[x][y].getType() == TileTypes.WATER){
-							GraphicsEngine.setColor(new Color(0,0,255));
-						}else if(tiles[x][y].getType() == TileTypes.SAND){
-							GraphicsEngine.setColor(new Color(255,255,100));
-						}else if(tiles[x][y].getType() == TileTypes.ROCKS){
-							GraphicsEngine.setColor(new Color(100,100,100));
-						}
+						if(tiles[x][y].getContainsBuilding()){
+							
+							GraphicsEngine.setColor(new Color(255,0,0));
+							GraphicsEngine.rect((int) ((x*tileSize)-cameraOffset.getX()+displayCorner.getX()),(int) ((y*tileSize)-cameraOffset.getY()+displayCorner.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+		
+							GraphicsEngine.setColor(new Color(255,255,255));
+							GraphicsEngine.outLineRect((int) ((x*tileSize)-cameraOffset.getX()+displayCorner.getX()),(int) ((y*tileSize)-cameraOffset.getY()+displayCorner.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
 						
-						GraphicsEngine.rect((int) ((x*tileSize)-cameraOffset.getX()+screenCenter.getX()),(int) ((y*tileSize)-cameraOffset.getY()+screenCenter.getY()), tileSize+1, tileSize+1); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
-						
-						if(x == selectedTileX && y == selectedTileY){
-							if(tiles[x][y].getCanBuild()){
-								GraphicsEngine.setColor(new Color(0,255,0,150));
-							}else{
-								GraphicsEngine.setColor(new Color(255,0,0,150));
-							}
-							GraphicsEngine.rect((int) ((x*tileSize)-cameraOffset.getX()+screenCenter.getX()),(int) ((y*tileSize)-cameraOffset.getY()+screenCenter.getY()), tileSize+1, tileSize+1); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+							GraphicsEngine.setColor(new Color(0,0,0));
+							GraphicsEngine.outLineRect((int) ((x*tileSize)-cameraOffset.getX()+displayCorner.getX()) -1,(int) ((y*tileSize)-cameraOffset.getY()+displayCorner.getY()) -1, tileSize+2, tileSize+2); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+		
 						}
 					}
+				}
+			}
+		}
+	}
+
+	private void renderBackgroundImgage() { //renders the background as an image
+		GraphicsEngine.renderImage(HDMapImage,(int) (-cameraOffset.getX()+displayCorner.getX()),(int) (-cameraOffset.getY()+displayCorner.getY()), mapSize*tileSize, mapSize*tileSize);
+	
+		if(mouseBuilding != null){
+			if(selectedTileX >= 0 && selectedTileX < tiles.length){
+				if(selectedTileY >= 0 && selectedTileY < tiles[0].length){
+					if(tiles[selectedTileX][selectedTileY].getCanBuild()){
+						GraphicsEngine.setColor(new Color(0,255,0,100));
+					}else{
+						GraphicsEngine.setColor(new Color(255,0,0,100));
+					}
+					GraphicsEngine.rect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+displayCorner.getX()),(int) ((selectedTileY*tileSize)-cameraOffset.getY()+displayCorner.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+	
+					GraphicsEngine.setColor(new Color(255,255,255));
+					GraphicsEngine.outLineRect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+displayCorner.getX()),(int) ((selectedTileY*tileSize)-cameraOffset.getY()+displayCorner.getY()), tileSize, tileSize); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+		
+					GraphicsEngine.setColor(new Color(0,0,0));
+					GraphicsEngine.outLineRect((int) ((selectedTileX*tileSize)-cameraOffset.getX()+displayCorner.getX()) -1,(int) ((selectedTileY*tileSize)-cameraOffset.getY()+displayCorner.getY()) -1, tileSize+2, tileSize+2); //Draws the Tiles (tileSize+1 is used to remove borders around tiles)
+	
 				}
 			}
 		}
@@ -286,10 +325,27 @@ public class InGameManager {
 	
 	public void renderHUD(){
 		//Drawing HUD
+		
+		GraphicsEngine.setColor(new Color(100,100,100));
+//		GraphicsEngine.rect(10, 10, ( mapSize*minimapScale), GraphicsEngine.getHeight()-(30+( mapSize*minimapScale)));
+
+		GraphicsEngine.rect(0, 0, GraphicsEngine.getWidth(), topBorder);
+		
+		GraphicsEngine.rect(0, 0, leftBorder, GraphicsEngine.getHeight());
+//		
+		GraphicsEngine.rect(rightBorder, 0, GraphicsEngine.getWidth()-rightBorder, GraphicsEngine.getHeight());
+//		
+		GraphicsEngine.rect(0, bottomBorder, GraphicsEngine.getWidth(), GraphicsEngine.getHeight()-bottomBorder);
+		
+		GraphicsEngine.setColor(new Color(0,0,0));
+		GraphicsEngine.outLineRect(leftBorder, topBorder, rightBorder-leftBorder, bottomBorder-topBorder);
+		GraphicsEngine.setColor(new Color(255,255,255));
+		GraphicsEngine.outLineRect(leftBorder+1, topBorder+1, rightBorder-leftBorder-2, bottomBorder-topBorder-2);	
+		
 		GraphicsEngine.renderImage(mapImage, hudX, hudY, mapSize*minimapScale, mapSize*minimapScale); //Draws the map image
 		
 		GraphicsEngine.setColor(new Color(255, 255, 255));
-		GraphicsEngine.outLineRect(hudX + (cameraTileX*minimapScale) - (scaledScreenWidth/2), hudY + (cameraTileY*minimapScale) - (scaledScreenHeight/2),scaledScreenWidth, scaledScreenHeight); //Draws the Screen Representation on the Minimap
+		GraphicsEngine.outLineRect(hudX + (cameraTileX*minimapScale), hudY + (cameraTileY*minimapScale), scaledScreenWidth, scaledScreenHeight); //Draws the Screen Representation on the Minimap
 		
 		GraphicsEngine.setColor(new Color(0,0,0));
 		GraphicsEngine.outLineRect(hudX, hudY, mapSize*minimapScale, mapSize*minimapScale); //Draws a black outline around the minimap
