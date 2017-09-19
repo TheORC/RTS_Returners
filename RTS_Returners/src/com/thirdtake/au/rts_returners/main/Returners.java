@@ -1,5 +1,8 @@
 package com.thirdtake.au.rts_returners.main;
 
+import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
+import com.thirdtake.au.rts_returners.utils.Debug;
+
 /*
  * @Author: Oliver Clarke
  * @Date: 17/09/2017
@@ -9,17 +12,20 @@ public class Returners {
 	
 	public static final String BUILD_ID = "v0.1";
 	public static final String BUILD_NAME = "Returners";
+	
+	public static final Boolean DEBUG = false;
 
 	
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		System.out.println(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
+		Debug.Log(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
 		
-		Stop();
+		new ServerSocket("localhost", 8000);
 		
+		Stop();	
 	}
 	
 	public static void Stop(){
-		System.out.println(BUILD_NAME + " finished.");
+		Debug.Log(BUILD_NAME + " finished.");
 	}
 }
