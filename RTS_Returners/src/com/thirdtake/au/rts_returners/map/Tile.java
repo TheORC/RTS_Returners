@@ -4,9 +4,13 @@ import com.thirdtake.au.rts_returners.enums.TileTypes;
 
 public class Tile {
 	TileTypes type;
+	boolean canBuild = true;
 	
 	public Tile(TileTypes _type){
 		type = _type;
+		if(!getTraversableOnFoot()){
+			canBuild = false;
+		}
 	}
 	
 	public TileTypes getType(){
@@ -21,5 +25,9 @@ public class Tile {
 	}
 	public boolean getTraversableFlying(){ //Returns true if tile can be flown over
 		return type.traversableFlying;
+	}
+	
+	public boolean getCanBuild(){
+		return canBuild;
 	}
 }
