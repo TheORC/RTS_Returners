@@ -42,7 +42,7 @@ public class MessageCreator {
 		MessageHeader mHeader = MessageHeader.newBuilder().setHeaderLength(_mHeader.length).build(); //Create the header.
 		byte[] _HeaderBytes = mHeader.toByteArray();                                                 //Convert to byte array.
 			
-		Debug.Log("First header length: " + _HeaderBytes.length + " Message header length: " + _mHeader.length);
+		//Debug.Log("First header length: " + _HeaderBytes.length + " Message header length: " + _mHeader.length);
 			
 		if(_HeaderBytes.length != NetworkMessage.HEADER_BUFFER_SIZE){           //We have the wrong number of bytes in the header
 			Debug.LogError("Wrong number of bytes in a message header! " + _HeaderBytes.length);

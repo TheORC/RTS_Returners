@@ -1,6 +1,7 @@
 package com.thirdtake.au.rts_returners.main.Server;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message;
@@ -28,13 +29,13 @@ public class NetworkMessage {
 			
 			byte[] _messageHeaderBytes = new byte[HEADER_BUFFER_SIZE];                       //Byte array containing information about this message.  
 	        System.arraycopy(mBytes, 0, _messageHeaderBytes, 0, _messageHeaderBytes.length); //Get the header information from mBytes.
-	        MessageHeader mHeader = MessageHeader.parseFrom(_messageHeaderBytes);            //Get a reference to the header object
+	        MessageHeader _MHeader = MessageHeader.parseFrom(_messageHeaderBytes);            //Get a reference to the header object
 
 	        /*
 	         * Using the MessageHeader, it is possible to get
 	         * the information about the incoming message.
 	         */
-	        int _HeaderLength = mHeader.getHeaderLength();  								      //Get the length of the message information.
+	        int _HeaderLength = _MHeader.getHeaderLength();  								      //Get the length of the message information.
 	        byte[] _HeaderBytes = new byte[_HeaderLength];  									  //Create an array to hold the message info bytes.
 	        System.arraycopy(mBytes, _messageHeaderBytes.length, _HeaderBytes, 0, _HeaderLength); //Copy the information into the array.
 	        m_Header = Header.parseFrom(_HeaderBytes);
@@ -70,6 +71,10 @@ public class NetworkMessage {
 	 */
 	public MessageType MessageType(){
 		return m_Header.getMessageType();
+	}
+	
+	public ErrorType ErrorType(){
+		return m_Header.getErrorType();
 	}
 	
 	/**

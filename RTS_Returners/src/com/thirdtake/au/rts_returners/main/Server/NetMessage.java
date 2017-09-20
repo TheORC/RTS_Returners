@@ -15,6 +15,104 @@ public final class NetMessage {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   /**
+   * Protobuf enum {@code Server.ErrorType}
+   */
+  public enum ErrorType
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>SUCCESS = 0;</code>
+     */
+    SUCCESS(0),
+    /**
+     * <code>FAILED = 1;</code>
+     */
+    FAILED(1),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>SUCCESS = 0;</code>
+     */
+    public static final int SUCCESS_VALUE = 0;
+    /**
+     * <code>FAILED = 1;</code>
+     */
+    public static final int FAILED_VALUE = 1;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static ErrorType valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static ErrorType forNumber(int value) {
+      switch (value) {
+        case 0: return SUCCESS;
+        case 1: return FAILED;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<ErrorType>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        ErrorType> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<ErrorType>() {
+            public ErrorType findValueByNumber(int number) {
+              return ErrorType.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.thirdtake.au.rts_returners.main.Server.NetMessage.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final ErrorType[] VALUES = values();
+
+    public static ErrorType valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private ErrorType(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:Server.ErrorType)
+  }
+
+  /**
    * Protobuf enum {@code Server.MessageType}
    */
   public enum MessageType
@@ -95,7 +193,7 @@ public final class NetMessage {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return com.thirdtake.au.rts_returners.main.Server.NetMessage.getDescriptor().getEnumTypes().get(0);
+      return com.thirdtake.au.rts_returners.main.Server.NetMessage.getDescriptor().getEnumTypes().get(1);
     }
 
     private static final MessageType[] VALUES = values();
@@ -1375,6 +1473,23 @@ public final class NetMessage {
      * <code>.Server.MessageType messageType = 3;</code>
      */
     com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType getMessageType();
+
+    /**
+     * <pre>
+     *Was whatever successful or a failure.
+     * </pre>
+     *
+     * <code>.Server.ErrorType errorType = 4;</code>
+     */
+    int getErrorTypeValue();
+    /**
+     * <pre>
+     *Was whatever successful or a failure.
+     * </pre>
+     *
+     * <code>.Server.ErrorType errorType = 4;</code>
+     */
+    com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType getErrorType();
   }
   /**
    * Protobuf type {@code Server.Header}
@@ -1392,6 +1507,7 @@ public final class NetMessage {
       messageLength_ = 0;
       senderID_ = 0;
       messageType_ = 0;
+      errorType_ = 0;
     }
 
     @java.lang.Override
@@ -1436,6 +1552,12 @@ public final class NetMessage {
               int rawValue = input.readEnum();
 
               messageType_ = rawValue;
+              break;
+            }
+            case 32: {
+              int rawValue = input.readEnum();
+
+              errorType_ = rawValue;
               break;
             }
           }
@@ -1512,6 +1634,30 @@ public final class NetMessage {
       return result == null ? com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType.UNRECOGNIZED : result;
     }
 
+    public static final int ERRORTYPE_FIELD_NUMBER = 4;
+    private int errorType_;
+    /**
+     * <pre>
+     *Was whatever successful or a failure.
+     * </pre>
+     *
+     * <code>.Server.ErrorType errorType = 4;</code>
+     */
+    public int getErrorTypeValue() {
+      return errorType_;
+    }
+    /**
+     * <pre>
+     *Was whatever successful or a failure.
+     * </pre>
+     *
+     * <code>.Server.ErrorType errorType = 4;</code>
+     */
+    public com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType getErrorType() {
+      com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType result = com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.valueOf(errorType_);
+      return result == null ? com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1533,6 +1679,9 @@ public final class NetMessage {
       if (messageType_ != com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType.LOGIN.getNumber()) {
         output.writeEnum(3, messageType_);
       }
+      if (errorType_ != com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.SUCCESS.getNumber()) {
+        output.writeEnum(4, errorType_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1552,6 +1701,10 @@ public final class NetMessage {
       if (messageType_ != com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType.LOGIN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, messageType_);
+      }
+      if (errorType_ != com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.SUCCESS.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(4, errorType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1574,6 +1727,7 @@ public final class NetMessage {
       result = result && (getSenderID()
           == other.getSenderID());
       result = result && messageType_ == other.messageType_;
+      result = result && errorType_ == other.errorType_;
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1591,6 +1745,8 @@ public final class NetMessage {
       hash = (53 * hash) + getSenderID();
       hash = (37 * hash) + MESSAGETYPE_FIELD_NUMBER;
       hash = (53 * hash) + messageType_;
+      hash = (37 * hash) + ERRORTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + errorType_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1726,6 +1882,8 @@ public final class NetMessage {
 
         messageType_ = 0;
 
+        errorType_ = 0;
+
         return this;
       }
 
@@ -1751,6 +1909,7 @@ public final class NetMessage {
         result.messageLength_ = messageLength_;
         result.senderID_ = senderID_;
         result.messageType_ = messageType_;
+        result.errorType_ = errorType_;
         onBuilt();
         return result;
       }
@@ -1800,6 +1959,9 @@ public final class NetMessage {
         }
         if (other.messageType_ != 0) {
           setMessageTypeValue(other.getMessageTypeValue());
+        }
+        if (other.errorType_ != 0) {
+          setErrorTypeValue(other.getErrorTypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1967,6 +2129,70 @@ public final class NetMessage {
         onChanged();
         return this;
       }
+
+      private int errorType_ = 0;
+      /**
+       * <pre>
+       *Was whatever successful or a failure.
+       * </pre>
+       *
+       * <code>.Server.ErrorType errorType = 4;</code>
+       */
+      public int getErrorTypeValue() {
+        return errorType_;
+      }
+      /**
+       * <pre>
+       *Was whatever successful or a failure.
+       * </pre>
+       *
+       * <code>.Server.ErrorType errorType = 4;</code>
+       */
+      public Builder setErrorTypeValue(int value) {
+        errorType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Was whatever successful or a failure.
+       * </pre>
+       *
+       * <code>.Server.ErrorType errorType = 4;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType getErrorType() {
+        com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType result = com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.valueOf(errorType_);
+        return result == null ? com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       *Was whatever successful or a failure.
+       * </pre>
+       *
+       * <code>.Server.ErrorType errorType = 4;</code>
+       */
+      public Builder setErrorType(com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        errorType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *Was whatever successful or a failure.
+       * </pre>
+       *
+       * <code>.Server.ErrorType errorType = 4;</code>
+       */
+      public Builder clearErrorType() {
+        
+        errorType_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -2042,12 +2268,14 @@ public final class NetMessage {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022\006Server\"-\n\007Message\022\017\n\007in" +
       "tVars\030\001 \003(\005\022\021\n\tstrigVars\030\002 \003(\t\"%\n\rMessag" +
-      "eHeader\022\024\n\014headerLength\030\001 \001(\005\"[\n\006Header\022" +
-      "\025\n\rmessageLength\030\001 \001(\005\022\020\n\010senderID\030\002 \001(\005" +
-      "\022(\n\013messageType\030\003 \001(\0162\023.Server.MessageTy" +
-      "pe*-\n\013MessageType\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001" +
-      "\022\007\n\003RPC\020\002B8\n*com.thirdtake.au.rts_return" +
-      "ers.main.ServerB\nNetMessageb\006proto3"
+      "eHeader\022\024\n\014headerLength\030\001 \001(\005\"\201\001\n\006Header" +
+      "\022\025\n\rmessageLength\030\001 \001(\005\022\020\n\010senderID\030\002 \001(" +
+      "\005\022(\n\013messageType\030\003 \001(\0162\023.Server.MessageT" +
+      "ype\022$\n\terrorType\030\004 \001(\0162\021.Server.ErrorTyp" +
+      "e*$\n\tErrorType\022\013\n\007SUCCESS\020\000\022\n\n\006FAILED\020\001*" +
+      "-\n\013MessageType\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\007\n" +
+      "\003RPC\020\002B8\n*com.thirdtake.au.rts_returners" +
+      ".main.ServerB\nNetMessageb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2078,7 +2306,7 @@ public final class NetMessage {
     internal_static_Server_Header_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Server_Header_descriptor,
-        new java.lang.String[] { "MessageLength", "SenderID", "MessageType", });
+        new java.lang.String[] { "MessageLength", "SenderID", "MessageType", "ErrorType", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -1,5 +1,7 @@
 package com.thirdtake.au.rts_returners.main;
 
+import java.util.Scanner;
+
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
 import com.thirdtake.au.rts_returners.utils.Debug;
 
@@ -20,8 +22,19 @@ public class Returners {
 		// TODO Auto-generated method stub
 		Debug.Log(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
 		
-		new ServerSocket("localhost", 8000);
+		ServerSocket socket = new ServerSocket("localhost", 8000);
 		
+		String input = "";
+		Scanner scanner = new Scanner(System.in);
+		while(!input.equalsIgnoreCase("q")){	
+			
+			input = scanner.nextLine().toLowerCase();
+			
+			socket.SendTestRPC(input);
+		}
+		
+		scanner.close();
+		socket.stopServer();
 		Stop();	
 	}
 	
