@@ -30,11 +30,11 @@ public class Returners {
 			
 			input = scanner.nextLine().toLowerCase();
 			
-			socket.SendTestRPC(input);
+//			socket.SendTestRPC(input);
 		}
 		
 		scanner.close();
-		socket.stopServer();
+		socket.StopServer();
 		Stop();	
 	}
 	

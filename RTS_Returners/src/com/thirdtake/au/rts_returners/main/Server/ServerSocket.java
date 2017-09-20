@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
-import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.utils.Debug;
 
@@ -20,11 +19,12 @@ public class ServerSocket extends Thread{
 	private String m_IP = "localhost"; //Ip of the server
 	private int m_PORT = 8000;  //The port the server used.
 	
-	public static boolean CONNECTED = false;
 	private boolean m_ServerRunning = false;
 	
 	private DatagramSocket m_Socket = null; //The socket to the server.
 	private InetAddress m_Host = null;
+	
+	private MessageHandler m_MessageHandler = null;
 		
 	/**
 	 * @param ip - The IP of the server being connected to.
@@ -33,6 +33,7 @@ public class ServerSocket extends Thread{
 	public ServerSocket(String ip, int port){
 		this.m_IP = ip;
 		this.m_PORT = port;
+		this.m_MessageHandler = new MessageHandler();
 		
 		
 		Debug.Log("Starting up internal server.");
@@ -43,7 +44,7 @@ public class ServerSocket extends Thread{
 			this.m_Host = InetAddress.getByName(m_IP);
 			
 			Debug.Log("Begining handshake...");
-			HandShake();
+			BeginHandShake();
 			
 			Debug.Log("Waiting for a response...");
 			start();
@@ -79,15 +80,23 @@ public class ServerSocket extends Thread{
 	            switch(message.MessageType()){      
 	            case LOGIN:
 	            	if(message.ErrorType() == ErrorType.SUCCESS){
-		            	
+	                	
 	            		int clientID = message.GetMessage().getIntVars(0);  //Get the id the server sent
 	            		int worldSeed = message.GetMessage().getIntVars(1); //Get the world seed
-	            	
-	            		LocalClient.ID = clientID;
 	            	
 	            		Debug.Log("Received login detials from the server!");
 	            		Debug.Log("Client ID: " + clientID);
 	            		Debug.Log("World seed: " + worldSeed);
+	            		
+	            		/*
+	            		 * Start the localClient and go online.
+	            		 */
+	            		LocalClient.MY_ID = clientID;   //Set MY clients ID.
+	            		LocalClient.IS_ONLINE = true;   //Set the client into online mode.
+	            		
+	            		LocalClient.StartLocalClient();
+	            		
+	            		//TODO: Implement game logic.
 
 	            	}else{
 	            		Debug.LogError("Failed to connect to the server.  Server is full!");
@@ -95,11 +104,10 @@ public class ServerSocket extends Thread{
 	            	}
 	            	break;
 	            case RPC:
-	            	
-	            	Debug.Log("Received: " + message.GetMessage().getStrigVars(0));
+	            	m_MessageHandler.ProccessRPCMessage(message);
 	            	break;
-				default:
-					break;
+	    		default:
+	    			break;
 	            }
 	            
 			}catch(IOException e){
@@ -113,7 +121,7 @@ public class ServerSocket extends Thread{
 	 * This method is used to start communication with the server.
 	 * @throws IOException 
 	 */
-	private void HandShake() throws IOException{
+	private void BeginHandShake() throws IOException{
 		/*
 		 * Use ProtoBuf to compile a login message.
 		 */
@@ -122,25 +130,12 @@ public class ServerSocket extends Thread{
 		m_Socket.send(_packet);                                                                               //Send the packet.
 	}
 	
-	public void stopServer()
+	/**
+	 *  Stop the server listening thread.
+	 */
+	public void StopServer()
     {
         m_ServerRunning = false;
         this.interrupt();
     }
-	
-	public void SendTestRPC(String message){	
-		Message.Builder ms = Message.newBuilder();
-		ms.addStrigVars(message);
-		
-		byte[] information = ms.build().toByteArray();
-		byte[] _packetBytes  = MessageCreator.CreateMessage(MessageType.RPC, information);
-		
-		DatagramPacket _packet = new DatagramPacket(_packetBytes, _packetBytes.length, m_Host, m_PORT);
-		try {
-			m_Socket.send(_packet);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 }

@@ -24,7 +24,7 @@ public class MessageCreator {
 		 * Create a header containing information about the message.
 		 */
 		Builder mHB = Header.newBuilder();   //Create a builder
-		mHB.setSenderID(LocalClient.ID);     //Set the sender id to this local client
+		mHB.setSenderID(LocalClient.MY_ID);     //Set the sender id to this local client
 			
 		if(messageBytes != null)
 			mHB.setMessageLength(_mB.length);//Set the length of the message.
