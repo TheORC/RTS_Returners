@@ -3,6 +3,7 @@ package com.thirdtake.au.rts_returners.main;
 
 import java.awt.Color;
 
+import com.Tylabobaid.Centaur.Events.Keyinput;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.Game;
 import com.Tylabobaid.Centaur.Main.Main;
@@ -12,7 +13,7 @@ public class Manager extends Main{ //This Class must extend Manager
 	
 	static Manager man = new Manager(); //This line is necissary for setup
 	public static GameStates gameState = GameStates.INGAME;
-	public static InGameManager inGameManager = new InGameManager();
+	public static InGameManager inGameManager;
 	
 	public static void main(String[] args) { //This is what starts the java program
 		Game.startGame(man); //This starts the Game
@@ -20,6 +21,8 @@ public class Manager extends Main{ //This Class must extend Manager
 
 	@Override
 	public void initialise() { //This runs once when first started
+		
+		Images.load();
 		
 		setMultithreaded(false); //decides whether or not to use different threads for the rendering and ticking
 		//note, the thread pool can still be used while this is set the false
@@ -38,6 +41,8 @@ public class Manager extends Main{ //This Class must extend Manager
 		setTargetFPS(120); //Default is 60
 		
 //		Keyinput.showingKeyPresses(true);
+		
+		inGameManager = new InGameManager();
 	}
 	
 	@Override

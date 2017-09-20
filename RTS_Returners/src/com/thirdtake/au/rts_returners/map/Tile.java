@@ -45,11 +45,18 @@ public class Tile {
 	public void tickBuilding(){
 		if(buildTime < maxBuildTime){
 			buildTime ++;
+			
+			building.setHealth((building.getMaxHealth()*buildTime)/maxBuildTime);
 		}else{
 			currentlyBuilding = false;
 			if(building != null){
-				containsBuilding = true;
 				building.tick();
+				
+				if(building.getHealth() <= 0){
+					containsBuilding = false;
+					building = null;
+					canBuild = true;
+				}
 			}
 		}
 	}
@@ -61,6 +68,7 @@ public class Tile {
 			currentlyBuilding = true;
 			maxBuildTime = building.getBuildTime();
 			buildTime = 0;
+			containsBuilding = true;
 			
 			return true;
 		}
@@ -76,5 +84,13 @@ public class Tile {
 	}
 	public boolean getContainsBuilding(){
 		return containsBuilding;
+	}
+	
+	public Building getBuilding(){
+		return building;
+	}
+
+	public boolean getCurrentlyBuilding() {
+		return currentlyBuilding;
 	}
 }
