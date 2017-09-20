@@ -2,6 +2,8 @@ package com.thirdtake.au.rts_returners.main;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.Tylabobaid.Centaur.Events.Button;
 import com.Tylabobaid.Centaur.Events.Keyinput;
@@ -11,13 +13,14 @@ import com.Tylabobaid.Centaur.Main.PerlinNoise;
 import com.Tylabobaid.Centaur.Main.Vector;
 import com.thirdtake.au.rts_returners.Buildings.Base;
 import com.thirdtake.au.rts_returners.Buildings.Building;
+import com.thirdtake.au.rts_returners.Units.Unit;
 import com.thirdtake.au.rts_returners.enums.TileTypes;
 import com.thirdtake.au.rts_returners.map.Tile;
 
 public class InGameManager {
 	private Tile[][] tiles; // 2D array that contains the tiles on the current
 							// map
-	private float[][] heightMap; // 2D array that contains the tiles on the
+//	private float[][] heightMap; // 2D array that contains the height of tiles on the
 									// current map
 	private float[][] HDHeightMap; // 2D array that contains the tiles on the
 									// current map
@@ -28,7 +31,8 @@ public class InGameManager {
 	Vector cameraOffset = new Vector(); // Vector that determines the position
 										// of the camera
 	Vector displayCorner = new Vector();
-
+	Vector realMousePos;
+	
 	int mapSize = 256; // width/ height of the map (in tiles)
 	int mapSeed = 420420; // seed used to generate the map
 	int tileSize = 25; // size of each tile when rendering
@@ -39,11 +43,11 @@ public class InGameManager {
 	int borderWidth = 150; // border of screen where the mouse can move the
 							// camera
 
-	int highlightedTileX = 0; // The tile that the mouse is hovering over
-	int highlightedTileY = 0;
+	int highlightedTileX = -1; // The tile that the mouse is hovering over
+	int highlightedTileY = -1;
 
-	int selectedTileX = 0; // The tile that the mouse is hovering over
-	int selectedTileY = 0;
+	int selectedTileX = -1; // The tile that the mouse is hovering over
+	int selectedTileY = -1;
 
 	int hudX = 10; // X- coordinate of the HUD (set when ticking the camera)
 	int hudY = 10; // Y- coordinate of the HUD (set when ticking the camera)
@@ -61,6 +65,12 @@ public class InGameManager {
 	int topBorder;
 	int bottomBorder;
 
+	Color unitColour = new Color(255,255,255);
+	Color buildingColour = new Color(255,255,255);
+	
+	public List<Unit> localPlayerUnits = new ArrayList<Unit>();
+	public List<Integer> selectedUnits = new ArrayList<Integer>();
+	
 	private Button button1 = new Button(10, 220 + (minimapScale * mapSize), 50, 50, "", new Color(255, 255, 255),
 			new Color(100, 100, 100));
 	private Button button2 = new Button(70, 220 + (minimapScale * mapSize), 50, 50, "", new Color(255, 255, 255),
@@ -88,7 +98,7 @@ public class InGameManager {
 		noise = new PerlinNoise(mapSeed); // initialises the Perlin Noise Used
 		tiles = newMap(mapSize, mapSize); // generates the map
 
-		mouseBuilding = new Base("HQ", 1000, new Vector(), 360, 10);
+		mouseBuilding = new Base();
 
 		mapImage = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_INT_ARGB); // creates
 																						// the
@@ -178,8 +188,6 @@ public class InGameManager {
 							rockShade = 50;
 						}
 
-						// System.out.println(rockShade);
-
 						if (tiles[i][j].getType() == TileTypes.GROUND) { // Determines
 																			// the
 																			// Colour
@@ -242,14 +250,42 @@ public class InGameManager {
 			}
 		}
 
-		heightMap = floats;
+//		heightMap = floats;
 		return tiles;
 	}
 
 	public void tick() {
 		tickCamera(); // Performs all Camera Calculations
 		tickTiles();
+		tickUnits();
+	}
 
+	private void tickUnits() {
+		
+		if(selectedUnits.size() >= 1){
+			mouseBuilding = null;
+		}
+		
+		for(int i = 0; i < localPlayerUnits.size(); i ++){
+			localPlayerUnits.get(i).move();
+			
+			if(MouseInput.leftClick()){
+				
+				if(localPlayerUnits.get(i).hitCheck(realMousePos)){
+					
+					if(!Keyinput.getkey(16) && !Keyinput.getkey(17)){
+						selectedUnits.clear();
+					}
+					
+					selectedUnits.add(i);
+					
+					selectedTileX = -1;
+					selectedTileY = -1;
+					
+					sanitiseSelectedUnits();
+				}
+			}
+		}
 	}
 
 	private void tickTiles() {
@@ -257,7 +293,7 @@ public class InGameManager {
 			if (mouseBuilding != null) {
 				if (highlightedTileX >= 0 && highlightedTileX < tiles.length) {
 					if (highlightedTileY >= 0 && highlightedTileY < tiles[0].length) {
-						tiles[highlightedTileX][highlightedTileY].build(mouseBuilding);
+						tiles[highlightedTileX][highlightedTileY].build(mouseBuilding, new Vector((highlightedTileX*tileSize)+(tileSize/2), (highlightedTileY*tileSize)+(tileSize/2)));
 
 						// remove required materials here
 
@@ -265,13 +301,24 @@ public class InGameManager {
 					}
 				}
 			} else {
-				selectedTileX = highlightedTileX;
-				selectedTileY = highlightedTileY;
+				if(tiles[highlightedTileX][highlightedTileY].getContainsBuilding()){
+					selectedTileX = highlightedTileX;
+					selectedTileY = highlightedTileY;
+					
+					selectedUnits.clear();
+				}
+			}
+		}
+		
+		if(MouseInput.rightClick() && mouseInsideWindow()){
+			for(int i = 0; i < selectedUnits.size(); i ++){
+				localPlayerUnits.get(selectedUnits.get(i)).setDestination(realMousePos);
 			}
 		}
 
 		if (Keyinput.getkey(27)) { // ESC
 			mouseBuilding = null;
+			selectedUnits.clear();
 		}
 
 		for (int x = 0; x < tiles.length; x++) {
@@ -280,34 +327,36 @@ public class InGameManager {
 			}
 		}
 		
-		if(tiles[selectedTileX][selectedTileY].getContainsBuilding() && tiles[selectedTileX][selectedTileY].getBuilding() != null){
-			if(!tiles[selectedTileX][selectedTileY].getCurrentlyBuilding()){
-				if(button1.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action1();
-				}
-				if(button2.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action2();
-				}
-				if(button3.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action3();
-				}
-				if(button4.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action4();
-				}
-				if(button5.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action5();
-				}
-				if(button6.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action6();
-				}
-				if(button7.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action7();
-				}
-				if(button8.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action8();
-				}
-				if(button9.Clicked()){
-					tiles[selectedTileX][selectedTileY].getBuilding().action9();
+		if(selectedTileX >= 0 && selectedTileX < tiles.length && selectedTileY >= 0 && selectedTileY < tiles[0].length){
+			if(tiles[selectedTileX][selectedTileY].getContainsBuilding() && tiles[selectedTileX][selectedTileY].getBuilding() != null){
+				if(!tiles[selectedTileX][selectedTileY].getCurrentlyBuilding()){
+					if(button1.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action1();
+					}
+					if(button2.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action2();
+					}
+					if(button3.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action3();
+					}
+					if(button4.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action4();
+					}
+					if(button5.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action5();
+					}
+					if(button6.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action6();
+					}
+					if(button7.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action7();
+					}
+					if(button8.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action8();
+					}
+					if(button9.Clicked()){
+						tiles[selectedTileX][selectedTileY].getBuilding().action9();
+					}
 				}
 			}
 		}
@@ -350,6 +399,8 @@ public class InGameManager {
 																							// minimap
 		scaledScreenHeight = (int) (minimapScale * (bottomBorder - topBorder) / tileSize);
 
+		realMousePos = new Vector(cameraOffset.getX()-displayCorner.getX()+MouseInput.getMouseX(), cameraOffset.getY()-displayCorner.getY()+MouseInput.getMouseY());
+		
 		// Checking Arrow keys to move Camera
 		if (Keyinput.getkey(38)) { // UP
 			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - cameraMaxMovementSpeed); // Moves
@@ -374,18 +425,7 @@ public class InGameManager {
 		}
 
 		// Ensuring that the Camera stays on the map
-		while (cameraOffset.getX() - (leftBorder / tileSize) < 0) {
-			cameraOffset = new Vector(cameraOffset.getX() + 1, cameraOffset.getY());
-		}
-		while (cameraOffset.getX() + (rightBorder - leftBorder) > (tiles.length * tileSize)) {
-			cameraOffset = new Vector(cameraOffset.getX() - 1, cameraOffset.getY());
-		}
-		while (cameraOffset.getY() - (topBorder / tileSize) < 0) {
-			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() + 1);
-		}
-		while (cameraOffset.getY() + (bottomBorder - topBorder) > (tiles[0].length * tileSize)) {
-			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - 1);
-		}
+//		lockCamera();
 
 		if (MouseInput.getMouseX() >= hudX && MouseInput.getMouseX() <= hudX + mapSize * minimapScale) { // When
 																											// the
@@ -436,8 +476,7 @@ public class InGameManager {
 				int speed = cameraMaxMovementSpeed
 						- (((MouseInput.getMouseY() - topBorder) * cameraMaxMovementSpeed) / borderWidth);
 				cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - speed); // Moves
-																								// Camera
-																								// UP
+																								// Camera																			// UP
 			}
 			if (deltaY <= borderWidth) { // DOWN
 				int speed = cameraMaxMovementSpeed - ((deltaY * cameraMaxMovementSpeed) / borderWidth);
@@ -459,14 +498,61 @@ public class InGameManager {
 																								// Camera
 																								// RIGHT
 			}
+		}
+		lockCamera();
+	}
 
+	private void lockCamera() {
+		while (cameraOffset.getX() - (leftBorder / tileSize) < 0) {
+			cameraOffset = new Vector(cameraOffset.getX() + 1, cameraOffset.getY());
+		}
+		while (cameraOffset.getX() + (rightBorder - leftBorder) > (tiles.length * tileSize)) {
+			cameraOffset = new Vector(cameraOffset.getX() - 1, cameraOffset.getY());
+		}
+		while (cameraOffset.getY() - (topBorder / tileSize) < 0) {
+			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() + 1);
+		}
+		while (cameraOffset.getY() + (bottomBorder - topBorder) > (tiles[0].length * tileSize)) {
+			cameraOffset = new Vector(cameraOffset.getX(), cameraOffset.getY() - 1);
 		}
 	}
 
 	public void render() {
 		renderBackgroundImgage();
+		renderUnits();
 		renderBuildings();
+		
 		renderHUD();
+	}
+
+	private void renderUnits() {
+		for(int i = 0; i < localPlayerUnits.size(); i ++){
+			if(Vector.squreDistance(localPlayerUnits.get(i).getPosition(), cameraOffset) <= renderRadius*renderRadius){
+				int XPos = (int) (localPlayerUnits.get(i).getPosition().getX());
+				XPos -= cameraOffset.getX()-displayCorner.getX();
+				
+				int YPos = (int) (localPlayerUnits.get(i).getPosition().getY());
+				YPos -= cameraOffset.getY()-displayCorner.getY();
+				
+				if(selectedUnit(i)){
+					GraphicsEngine.setColor(new Color(100,100,100, 150));
+					GraphicsEngine.ellipse(XPos-10, YPos-10, 20);
+				}
+				
+				GraphicsEngine.setColor(new Color(255,255,0));
+				GraphicsEngine.ellipse(XPos-5, YPos-5, 10);
+			}
+		}
+	}
+
+	private boolean selectedUnit(int index) {
+		for(int i = 0; i < selectedUnits.size(); i ++){
+			if(selectedUnits.get(i) == index){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private void renderBuildings() {
@@ -505,9 +591,7 @@ public class InGameManager {
 							GraphicsEngine.renderImage(tiles[x][y].getBuilding().getSprite(),
 									(int) ((x * tileSize) - cameraOffset.getX() + displayCorner.getX()),
 									(int) ((y * tileSize) - cameraOffset.getY() + displayCorner.getY()), tileSize,
-									tileSize); // Draws the Tiles (tileSize+1 is
-												// used to remove borders around
-												// tiles)
+									tileSize);
 
 						}
 					}
@@ -610,6 +694,24 @@ public class InGameManager {
 																											// the
 																											// map
 																											// image
+		int a;
+		for(int i = 0; i < localPlayerUnits.size(); i ++){
+			int x = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getX()/tileSize)*minimapScale));
+			int y = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getY()/tileSize)*minimapScale));
+							
+			GraphicsEngine.setColor(unitColour);
+			GraphicsEngine.ellipse(x-(minimapScale*2)+hudX, y-(minimapScale*2)+hudY, minimapScale*4);
+		}
+		
+		for(int x = 0; x < tiles.length; x ++){
+			for(int y = 0; y < tiles[0].length; y ++){
+				if(tiles[x][y].getContainsBuilding()){
+					GraphicsEngine.setColor(buildingColour);
+					GraphicsEngine.ellipse((x*minimapScale)+hudX-(minimapScale*2), (y*minimapScale)+hudY-(minimapScale*2), minimapScale*4);
+
+				}
+			}
+		}
 
 		GraphicsEngine.setColor(new Color(255, 255, 255));
 		GraphicsEngine.outLineRect(hudX + (cameraTileX * minimapScale), hudY + (cameraTileY * minimapScale),
@@ -661,7 +763,6 @@ public class InGameManager {
 				}
 
 				if(tiles[selectedTileX][selectedTileY].getContainsBuilding() && tiles[selectedTileX][selectedTileY].getBuilding() != null){
-					Building building = tiles[selectedTileX][selectedTileY].getBuilding();
 					if(!tiles[selectedTileX][selectedTileY].getCurrentlyBuilding()){
 						button1.render();
 						button2.render();
@@ -676,11 +777,38 @@ public class InGameManager {
 				}
 			}
 		}
+		
+		if (selectedUnits.size() >= 1) {
+			GraphicsEngine.setColor(new Color(255, 255, 255));
+			GraphicsEngine.textSize(20);
+			GraphicsEngine.text(selectedUnits.size()+" Units Selected", 10, 40 + (minimapScale * mapSize));
+			
+			if(selectedUnits.size() == 1){
+				GraphicsEngine.setColor(new Color(255, 255, 255));
+				GraphicsEngine.textSize(20);
+				GraphicsEngine.text("Health: " + localPlayerUnits.get(selectedUnits.get(0)).getHealth() + "/"	+ localPlayerUnits.get(selectedUnits.get(0)).getMaxHealth(), 10, 40 + (minimapScale * mapSize) + (30 * 1));
 
+			}
+		}
+		
 	}
 
 	public void setMouseBuilding(Building _building) {
 		mouseBuilding = _building;
 		
+	}
+	
+	public void sanitiseSelectedUnits(){
+		
+		for(int i = 0; i < selectedUnits.size(); i++){
+			for(int j = 0; j < selectedUnits.size(); j ++){
+				if(j != i){
+					if(selectedUnits.get(i) == selectedUnits.get(j)){
+						selectedUnits.remove(i);
+						i --;
+					}
+				}
+			}
+		}
 	}
 }

@@ -14,11 +14,10 @@ public class Building {
 	String name;
 	BufferedImage sprite;
 	
-	public Building(String _name, int _maxHealth, Vector _position, int _buildTime, int _buildCost, BufferedImage _sprite){
+	public Building(String _name, int _maxHealth, int _buildTime, int _buildCost, BufferedImage _sprite){
 		name = _name;
 		maxHealth = _maxHealth;
 //		health = maxHealth;
-		position = _position;
 		buildTime = _buildTime;
 		buildCost = _buildCost;
 		sprite = _sprite;
@@ -82,6 +81,10 @@ public class Building {
 	}
 	public void action9(){
 		
+	}
+
+	public void setPosition(Vector _position) {
+		position = _position;
 	}
 	
 }

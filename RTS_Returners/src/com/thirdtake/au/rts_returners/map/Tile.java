@@ -1,5 +1,6 @@
 package com.thirdtake.au.rts_returners.map;
 
+import com.Tylabobaid.Centaur.Main.Vector;
 import com.thirdtake.au.rts_returners.Buildings.Building;
 import com.thirdtake.au.rts_returners.enums.TileTypes;
 
@@ -61,9 +62,10 @@ public class Tile {
 		}
 	}
 	
-	public boolean build(Building _building){
+	public boolean build(Building _building, Vector _position){
 		if(canBuild){
 			building = _building;
+			building.setPosition(_position);
 			canBuild = false;
 			currentlyBuilding = true;
 			maxBuildTime = building.getBuildTime();
