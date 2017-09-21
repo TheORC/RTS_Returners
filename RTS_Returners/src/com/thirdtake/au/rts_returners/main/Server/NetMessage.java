@@ -129,6 +129,10 @@ public final class NetMessage {
      * <code>RPC = 2;</code>
      */
     RPC(2),
+    /**
+     * <code>INSTANTIATE = 3;</code>
+     */
+    INSTANTIATE(3),
     UNRECOGNIZED(-1),
     ;
 
@@ -144,6 +148,10 @@ public final class NetMessage {
      * <code>RPC = 2;</code>
      */
     public static final int RPC_VALUE = 2;
+    /**
+     * <code>INSTANTIATE = 3;</code>
+     */
+    public static final int INSTANTIATE_VALUE = 3;
 
 
     public final int getNumber() {
@@ -167,6 +175,7 @@ public final class NetMessage {
         case 0: return LOGIN;
         case 1: return LOGOUT;
         case 2: return RPC;
+        case 3: return INSTANTIATE;
         default: return null;
       }
     }
@@ -237,23 +246,47 @@ public final class NetMessage {
     int getIntVars(int index);
 
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
     java.util.List<java.lang.String>
-        getStrigVarsList();
+        getStringVarsList();
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
-    int getStrigVarsCount();
+    int getStringVarsCount();
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
-    java.lang.String getStrigVars(int index);
+    java.lang.String getStringVars(int index);
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
     com.google.protobuf.ByteString
-        getStrigVarsBytes(int index);
+        getStringVarsBytes(int index);
+
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> 
+        getVectorVarsList();
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getVectorVars(int index);
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    int getVectorVarsCount();
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    java.util.List<? extends com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder> 
+        getVectorVarsOrBuilderList();
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder getVectorVarsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code Server.Message}
@@ -269,7 +302,8 @@ public final class NetMessage {
     }
     private Message() {
       intVars_ = java.util.Collections.emptyList();
-      strigVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      stringVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      vectorVars_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -324,10 +358,19 @@ public final class NetMessage {
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                strigVars_ = new com.google.protobuf.LazyStringArrayList();
+                stringVars_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000002;
               }
-              strigVars_.add(s);
+              stringVars_.add(s);
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                vectorVars_ = new java.util.ArrayList<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              vectorVars_.add(
+                  input.readMessage(com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.parser(), extensionRegistry));
               break;
             }
           }
@@ -342,7 +385,10 @@ public final class NetMessage {
           intVars_ = java.util.Collections.unmodifiableList(intVars_);
         }
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          strigVars_ = strigVars_.getUnmodifiableView();
+          stringVars_ = stringVars_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          vectorVars_ = java.util.Collections.unmodifiableList(vectorVars_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -383,33 +429,68 @@ public final class NetMessage {
     }
     private int intVarsMemoizedSerializedSize = -1;
 
-    public static final int STRIGVARS_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList strigVars_;
+    public static final int STRINGVARS_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList stringVars_;
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
     public com.google.protobuf.ProtocolStringList
-        getStrigVarsList() {
-      return strigVars_;
+        getStringVarsList() {
+      return stringVars_;
     }
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
-    public int getStrigVarsCount() {
-      return strigVars_.size();
+    public int getStringVarsCount() {
+      return stringVars_.size();
     }
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
-    public java.lang.String getStrigVars(int index) {
-      return strigVars_.get(index);
+    public java.lang.String getStringVars(int index) {
+      return stringVars_.get(index);
     }
     /**
-     * <code>repeated string strigVars = 2;</code>
+     * <code>repeated string stringVars = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getStrigVarsBytes(int index) {
-      return strigVars_.getByteString(index);
+        getStringVarsBytes(int index) {
+      return stringVars_.getByteString(index);
+    }
+
+    public static final int VECTORVARS_FIELD_NUMBER = 3;
+    private java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> vectorVars_;
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    public java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> getVectorVarsList() {
+      return vectorVars_;
+    }
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    public java.util.List<? extends com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder> 
+        getVectorVarsOrBuilderList() {
+      return vectorVars_;
+    }
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    public int getVectorVarsCount() {
+      return vectorVars_.size();
+    }
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getVectorVars(int index) {
+      return vectorVars_.get(index);
+    }
+    /**
+     * <code>repeated .Server.Vector vectorVars = 3;</code>
+     */
+    public com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder getVectorVarsOrBuilder(
+        int index) {
+      return vectorVars_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -432,8 +513,11 @@ public final class NetMessage {
       for (int i = 0; i < intVars_.size(); i++) {
         output.writeInt32NoTag(intVars_.get(i));
       }
-      for (int i = 0; i < strigVars_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, strigVars_.getRaw(i));
+      for (int i = 0; i < stringVars_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, stringVars_.getRaw(i));
+      }
+      for (int i = 0; i < vectorVars_.size(); i++) {
+        output.writeMessage(3, vectorVars_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -459,11 +543,15 @@ public final class NetMessage {
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < strigVars_.size(); i++) {
-          dataSize += computeStringSizeNoTag(strigVars_.getRaw(i));
+        for (int i = 0; i < stringVars_.size(); i++) {
+          dataSize += computeStringSizeNoTag(stringVars_.getRaw(i));
         }
         size += dataSize;
-        size += 1 * getStrigVarsList().size();
+        size += 1 * getStringVarsList().size();
+      }
+      for (int i = 0; i < vectorVars_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, vectorVars_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -483,8 +571,10 @@ public final class NetMessage {
       boolean result = true;
       result = result && getIntVarsList()
           .equals(other.getIntVarsList());
-      result = result && getStrigVarsList()
-          .equals(other.getStrigVarsList());
+      result = result && getStringVarsList()
+          .equals(other.getStringVarsList());
+      result = result && getVectorVarsList()
+          .equals(other.getVectorVarsList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -500,9 +590,13 @@ public final class NetMessage {
         hash = (37 * hash) + INTVARS_FIELD_NUMBER;
         hash = (53 * hash) + getIntVarsList().hashCode();
       }
-      if (getStrigVarsCount() > 0) {
-        hash = (37 * hash) + STRIGVARS_FIELD_NUMBER;
-        hash = (53 * hash) + getStrigVarsList().hashCode();
+      if (getStringVarsCount() > 0) {
+        hash = (37 * hash) + STRINGVARS_FIELD_NUMBER;
+        hash = (53 * hash) + getStringVarsList().hashCode();
+      }
+      if (getVectorVarsCount() > 0) {
+        hash = (37 * hash) + VECTORVARS_FIELD_NUMBER;
+        hash = (53 * hash) + getVectorVarsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -629,14 +723,21 @@ public final class NetMessage {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getVectorVarsFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
         intVars_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000001);
-        strigVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        stringVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (vectorVarsBuilder_ == null) {
+          vectorVars_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          vectorVarsBuilder_.clear();
+        }
         return this;
       }
 
@@ -666,10 +767,19 @@ public final class NetMessage {
         }
         result.intVars_ = intVars_;
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          strigVars_ = strigVars_.getUnmodifiableView();
+          stringVars_ = stringVars_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.strigVars_ = strigVars_;
+        result.stringVars_ = stringVars_;
+        if (vectorVarsBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            vectorVars_ = java.util.Collections.unmodifiableList(vectorVars_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.vectorVars_ = vectorVars_;
+        } else {
+          result.vectorVars_ = vectorVarsBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -721,15 +831,41 @@ public final class NetMessage {
           }
           onChanged();
         }
-        if (!other.strigVars_.isEmpty()) {
-          if (strigVars_.isEmpty()) {
-            strigVars_ = other.strigVars_;
+        if (!other.stringVars_.isEmpty()) {
+          if (stringVars_.isEmpty()) {
+            stringVars_ = other.stringVars_;
             bitField0_ = (bitField0_ & ~0x00000002);
           } else {
-            ensureStrigVarsIsMutable();
-            strigVars_.addAll(other.strigVars_);
+            ensureStringVarsIsMutable();
+            stringVars_.addAll(other.stringVars_);
           }
           onChanged();
+        }
+        if (vectorVarsBuilder_ == null) {
+          if (!other.vectorVars_.isEmpty()) {
+            if (vectorVars_.isEmpty()) {
+              vectorVars_ = other.vectorVars_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureVectorVarsIsMutable();
+              vectorVars_.addAll(other.vectorVars_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.vectorVars_.isEmpty()) {
+            if (vectorVarsBuilder_.isEmpty()) {
+              vectorVarsBuilder_.dispose();
+              vectorVarsBuilder_ = null;
+              vectorVars_ = other.vectorVars_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              vectorVarsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getVectorVarsFieldBuilder() : null;
+            } else {
+              vectorVarsBuilder_.addAllMessages(other.vectorVars_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -825,98 +961,338 @@ public final class NetMessage {
         return this;
       }
 
-      private com.google.protobuf.LazyStringList strigVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureStrigVarsIsMutable() {
+      private com.google.protobuf.LazyStringList stringVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureStringVarsIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          strigVars_ = new com.google.protobuf.LazyStringArrayList(strigVars_);
+          stringVars_ = new com.google.protobuf.LazyStringArrayList(stringVars_);
           bitField0_ |= 0x00000002;
          }
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
       public com.google.protobuf.ProtocolStringList
-          getStrigVarsList() {
-        return strigVars_.getUnmodifiableView();
+          getStringVarsList() {
+        return stringVars_.getUnmodifiableView();
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public int getStrigVarsCount() {
-        return strigVars_.size();
+      public int getStringVarsCount() {
+        return stringVars_.size();
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public java.lang.String getStrigVars(int index) {
-        return strigVars_.get(index);
+      public java.lang.String getStringVars(int index) {
+        return stringVars_.get(index);
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getStrigVarsBytes(int index) {
-        return strigVars_.getByteString(index);
+          getStringVarsBytes(int index) {
+        return stringVars_.getByteString(index);
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public Builder setStrigVars(
+      public Builder setStringVars(
           int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureStrigVarsIsMutable();
-        strigVars_.set(index, value);
+  ensureStringVarsIsMutable();
+        stringVars_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public Builder addStrigVars(
+      public Builder addStringVars(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureStrigVarsIsMutable();
-        strigVars_.add(value);
+  ensureStringVarsIsMutable();
+        stringVars_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public Builder addAllStrigVars(
+      public Builder addAllStringVars(
           java.lang.Iterable<java.lang.String> values) {
-        ensureStrigVarsIsMutable();
+        ensureStringVarsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, strigVars_);
+            values, stringVars_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public Builder clearStrigVars() {
-        strigVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      public Builder clearStringVars() {
+        stringVars_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string strigVars = 2;</code>
+       * <code>repeated string stringVars = 2;</code>
        */
-      public Builder addStrigVarsBytes(
+      public Builder addStringVarsBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        ensureStrigVarsIsMutable();
-        strigVars_.add(value);
+        ensureStringVarsIsMutable();
+        stringVars_.add(value);
         onChanged();
         return this;
+      }
+
+      private java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> vectorVars_ =
+        java.util.Collections.emptyList();
+      private void ensureVectorVarsIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          vectorVars_ = new java.util.ArrayList<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector>(vectorVars_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder, com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder> vectorVarsBuilder_;
+
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> getVectorVarsList() {
+        if (vectorVarsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(vectorVars_);
+        } else {
+          return vectorVarsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public int getVectorVarsCount() {
+        if (vectorVarsBuilder_ == null) {
+          return vectorVars_.size();
+        } else {
+          return vectorVarsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getVectorVars(int index) {
+        if (vectorVarsBuilder_ == null) {
+          return vectorVars_.get(index);
+        } else {
+          return vectorVarsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder setVectorVars(
+          int index, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector value) {
+        if (vectorVarsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureVectorVarsIsMutable();
+          vectorVars_.set(index, value);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder setVectorVars(
+          int index, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder builderForValue) {
+        if (vectorVarsBuilder_ == null) {
+          ensureVectorVarsIsMutable();
+          vectorVars_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          vectorVarsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder addVectorVars(com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector value) {
+        if (vectorVarsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureVectorVarsIsMutable();
+          vectorVars_.add(value);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder addVectorVars(
+          int index, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector value) {
+        if (vectorVarsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureVectorVarsIsMutable();
+          vectorVars_.add(index, value);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder addVectorVars(
+          com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder builderForValue) {
+        if (vectorVarsBuilder_ == null) {
+          ensureVectorVarsIsMutable();
+          vectorVars_.add(builderForValue.build());
+          onChanged();
+        } else {
+          vectorVarsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder addVectorVars(
+          int index, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder builderForValue) {
+        if (vectorVarsBuilder_ == null) {
+          ensureVectorVarsIsMutable();
+          vectorVars_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          vectorVarsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder addAllVectorVars(
+          java.lang.Iterable<? extends com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector> values) {
+        if (vectorVarsBuilder_ == null) {
+          ensureVectorVarsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, vectorVars_);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder clearVectorVars() {
+        if (vectorVarsBuilder_ == null) {
+          vectorVars_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public Builder removeVectorVars(int index) {
+        if (vectorVarsBuilder_ == null) {
+          ensureVectorVarsIsMutable();
+          vectorVars_.remove(index);
+          onChanged();
+        } else {
+          vectorVarsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder getVectorVarsBuilder(
+          int index) {
+        return getVectorVarsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder getVectorVarsOrBuilder(
+          int index) {
+        if (vectorVarsBuilder_ == null) {
+          return vectorVars_.get(index);  } else {
+          return vectorVarsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public java.util.List<? extends com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder> 
+           getVectorVarsOrBuilderList() {
+        if (vectorVarsBuilder_ != null) {
+          return vectorVarsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(vectorVars_);
+        }
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder addVectorVarsBuilder() {
+        return getVectorVarsFieldBuilder().addBuilder(
+            com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder addVectorVarsBuilder(
+          int index) {
+        return getVectorVarsFieldBuilder().addBuilder(
+            index, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Server.Vector vectorVars = 3;</code>
+       */
+      public java.util.List<com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder> 
+           getVectorVarsBuilderList() {
+        return getVectorVarsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder, com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder> 
+          getVectorVarsFieldBuilder() {
+        if (vectorVarsBuilder_ == null) {
+          vectorVarsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder, com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder>(
+                  vectorVars_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          vectorVars_ = null;
+        }
+        return vectorVarsBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2242,6 +2618,580 @@ public final class NetMessage {
 
   }
 
+  public interface VectorOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Server.Vector)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 x = 1;</code>
+     */
+    int getX();
+
+    /**
+     * <code>int32 y = 2;</code>
+     */
+    int getY();
+
+    /**
+     * <code>int32 z = 3;</code>
+     */
+    int getZ();
+  }
+  /**
+   * Protobuf type {@code Server.Vector}
+   */
+  public  static final class Vector extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:Server.Vector)
+      VectorOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Vector.newBuilder() to construct.
+    private Vector(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Vector() {
+      x_ = 0;
+      y_ = 0;
+      z_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Vector(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              x_ = input.readInt32();
+              break;
+            }
+            case 16: {
+
+              y_ = input.readInt32();
+              break;
+            }
+            case 24: {
+
+              z_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.thirdtake.au.rts_returners.main.Server.NetMessage.internal_static_Server_Vector_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.thirdtake.au.rts_returners.main.Server.NetMessage.internal_static_Server_Vector_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.class, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder.class);
+    }
+
+    public static final int X_FIELD_NUMBER = 1;
+    private int x_;
+    /**
+     * <code>int32 x = 1;</code>
+     */
+    public int getX() {
+      return x_;
+    }
+
+    public static final int Y_FIELD_NUMBER = 2;
+    private int y_;
+    /**
+     * <code>int32 y = 2;</code>
+     */
+    public int getY() {
+      return y_;
+    }
+
+    public static final int Z_FIELD_NUMBER = 3;
+    private int z_;
+    /**
+     * <code>int32 z = 3;</code>
+     */
+    public int getZ() {
+      return z_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (x_ != 0) {
+        output.writeInt32(1, x_);
+      }
+      if (y_ != 0) {
+        output.writeInt32(2, y_);
+      }
+      if (z_ != 0) {
+        output.writeInt32(3, z_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (x_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, x_);
+      }
+      if (y_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, y_);
+      }
+      if (z_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, z_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector)) {
+        return super.equals(obj);
+      }
+      com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector other = (com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector) obj;
+
+      boolean result = true;
+      result = result && (getX()
+          == other.getX());
+      result = result && (getY()
+          == other.getY());
+      result = result && (getZ()
+          == other.getZ());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + X_FIELD_NUMBER;
+      hash = (53 * hash) + getX();
+      hash = (37 * hash) + Y_FIELD_NUMBER;
+      hash = (53 * hash) + getY();
+      hash = (37 * hash) + Z_FIELD_NUMBER;
+      hash = (53 * hash) + getZ();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code Server.Vector}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:Server.Vector)
+        com.thirdtake.au.rts_returners.main.Server.NetMessage.VectorOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.thirdtake.au.rts_returners.main.Server.NetMessage.internal_static_Server_Vector_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.thirdtake.au.rts_returners.main.Server.NetMessage.internal_static_Server_Vector_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.class, com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.Builder.class);
+      }
+
+      // Construct using com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        x_ = 0;
+
+        y_ = 0;
+
+        z_ = 0;
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.thirdtake.au.rts_returners.main.Server.NetMessage.internal_static_Server_Vector_descriptor;
+      }
+
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getDefaultInstanceForType() {
+        return com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.getDefaultInstance();
+      }
+
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector build() {
+        com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector buildPartial() {
+        com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector result = new com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector(this);
+        result.x_ = x_;
+        result.y_ = y_;
+        result.z_ = z_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector) {
+          return mergeFrom((com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector other) {
+        if (other == com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector.getDefaultInstance()) return this;
+        if (other.getX() != 0) {
+          setX(other.getX());
+        }
+        if (other.getY() != 0) {
+          setY(other.getY());
+        }
+        if (other.getZ() != 0) {
+          setZ(other.getZ());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int x_ ;
+      /**
+       * <code>int32 x = 1;</code>
+       */
+      public int getX() {
+        return x_;
+      }
+      /**
+       * <code>int32 x = 1;</code>
+       */
+      public Builder setX(int value) {
+        
+        x_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 x = 1;</code>
+       */
+      public Builder clearX() {
+        
+        x_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int y_ ;
+      /**
+       * <code>int32 y = 2;</code>
+       */
+      public int getY() {
+        return y_;
+      }
+      /**
+       * <code>int32 y = 2;</code>
+       */
+      public Builder setY(int value) {
+        
+        y_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 y = 2;</code>
+       */
+      public Builder clearY() {
+        
+        y_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int z_ ;
+      /**
+       * <code>int32 z = 3;</code>
+       */
+      public int getZ() {
+        return z_;
+      }
+      /**
+       * <code>int32 z = 3;</code>
+       */
+      public Builder setZ(int value) {
+        
+        z_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 z = 3;</code>
+       */
+      public Builder clearZ() {
+        
+        z_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:Server.Vector)
+    }
+
+    // @@protoc_insertion_point(class_scope:Server.Vector)
+    private static final com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector();
+    }
+
+    public static com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Vector>
+        PARSER = new com.google.protobuf.AbstractParser<Vector>() {
+      public Vector parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Vector(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Vector> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Vector> getParserForType() {
+      return PARSER;
+    }
+
+    public com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_Server_Message_descriptor;
   private static final 
@@ -2257,6 +3207,11 @@ public final class NetMessage {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Server_Header_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Server_Vector_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Server_Vector_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2266,16 +3221,19 @@ public final class NetMessage {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rMessage.proto\022\006Server\"-\n\007Message\022\017\n\007in" +
-      "tVars\030\001 \003(\005\022\021\n\tstrigVars\030\002 \003(\t\"%\n\rMessag" +
-      "eHeader\022\024\n\014headerLength\030\001 \001(\005\"\201\001\n\006Header" +
-      "\022\025\n\rmessageLength\030\001 \001(\005\022\020\n\010senderID\030\002 \001(" +
-      "\005\022(\n\013messageType\030\003 \001(\0162\023.Server.MessageT" +
-      "ype\022$\n\terrorType\030\004 \001(\0162\021.Server.ErrorTyp" +
-      "e*$\n\tErrorType\022\013\n\007SUCCESS\020\000\022\n\n\006FAILED\020\001*" +
-      "-\n\013MessageType\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\007\n" +
-      "\003RPC\020\002B8\n*com.thirdtake.au.rts_returners" +
-      ".main.ServerB\nNetMessageb\006proto3"
+      "\n\rMessage.proto\022\006Server\"R\n\007Message\022\017\n\007in" +
+      "tVars\030\001 \003(\005\022\022\n\nstringVars\030\002 \003(\t\022\"\n\nvecto" +
+      "rVars\030\003 \003(\0132\016.Server.Vector\"%\n\rMessageHe" +
+      "ader\022\024\n\014headerLength\030\001 \001(\005\"\201\001\n\006Header\022\025\n" +
+      "\rmessageLength\030\001 \001(\005\022\020\n\010senderID\030\002 \001(\005\022(" +
+      "\n\013messageType\030\003 \001(\0162\023.Server.MessageType" +
+      "\022$\n\terrorType\030\004 \001(\0162\021.Server.ErrorType\")" +
+      "\n\006Vector\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\t\n\001z\030\003 \001(" +
+      "\005*$\n\tErrorType\022\013\n\007SUCCESS\020\000\022\n\n\006FAILED\020\001*" +
+      ">\n\013MessageType\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\022\007\n",
+      "\003RPC\020\002\022\017\n\013INSTANTIATE\020\003B8\n*com.thirdtake" +
+      ".au.rts_returners.main.ServerB\nNetMessag" +
+      "eb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2294,7 +3252,7 @@ public final class NetMessage {
     internal_static_Server_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Server_Message_descriptor,
-        new java.lang.String[] { "IntVars", "StrigVars", });
+        new java.lang.String[] { "IntVars", "StringVars", "VectorVars", });
     internal_static_Server_MessageHeader_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Server_MessageHeader_fieldAccessorTable = new
@@ -2307,6 +3265,12 @@ public final class NetMessage {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Server_Header_descriptor,
         new java.lang.String[] { "MessageLength", "SenderID", "MessageType", "ErrorType", });
+    internal_static_Server_Vector_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_Server_Vector_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Server_Vector_descriptor,
+        new java.lang.String[] { "X", "Y", "Z", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
