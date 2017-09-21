@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import com.thirdtake.au.rts_returners.main.Server.LocalClient;
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
-import com.thirdtake.au.rts_returners.main.entities.Basic;
 import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
 import com.thirdtake.au.rts_returners.main.utils.Debug;
 import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
@@ -20,28 +19,27 @@ public class Returners {
 	public static final String BUILD_NAME = "Returners";
 	
 	public static final Boolean DEBUG = false;
-
 	
 	public static void main(String[] args) throws InterruptedException {
+		
 		// TODO Auto-generated method stub
 		Debug.Log(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
 		
+		ServerSocket socket = new ServerSocket("localhost", 8000);
 		
-		Basic b = (Basic) LocalClient.Instantiate(0, 1, Vector3PlaceHolder.Zero());
+		String input = "";
+		Scanner scanner = new Scanner(System.in);
+		while(!input.equalsIgnoreCase("q")){	
+			input = scanner.nextLine().toLowerCase();
+			
+			if(input.equalsIgnoreCase("b"))
+				LocalClient.Instantiate(EntityTypes.BASIC, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
+			if(input.equalsIgnoreCase("f"))
+				LocalClient.Instantiate(EntityTypes.FANCY, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
+		}
 		
-//		ServerSocket socket = new ServerSocket("localhost", 8000);
-//		
-//		String input = "";
-//		Scanner scanner = new Scanner(System.in);
-//		while(!input.equalsIgnoreCase("q")){	
-//			
-//			input = scanner.nextLine().toLowerCase();
-//			
-////			socket.SendTestRPC(input);
-//		}
-		
-		//scanner.close();
-		//socket.StopServer();
+		scanner.close();
+		socket.StopServer();
 		Stop();	
 	}
 	

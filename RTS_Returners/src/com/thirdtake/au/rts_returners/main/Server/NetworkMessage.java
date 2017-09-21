@@ -78,7 +78,7 @@ public class NetworkMessage {
 	}
 	
 	/**
-	 * @return  Returns a reference to the Message class, so that variables can be grabed from it.
+	 * @return  Returns a reference to the Message class, so that variables can be grabbed from it.
 	 */
 	public Message GetMessage(){
 		return m_Message;

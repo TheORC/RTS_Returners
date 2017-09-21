@@ -5,7 +5,7 @@ import com.thirdtake.au.rts_returners.main.utils.Debug;
 public enum EntityTypes {
 	
 	//Format (ID, Type)
-	BASIC(0, Basic.class);
+	BASIC(0, Basic.class), FANCY(1, Fancy.class);
 	
 	private int ID;
 	private Class<?> c;
