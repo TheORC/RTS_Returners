@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import com.thirdtake.au.rts_returners.utils.Debug;
-import com.thirdtake.au.rts_returners.utils.Stack;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Stack;
 
 /**
  * @author Oliver Clarke
@@ -47,7 +47,7 @@ public class NetworkView {
 			m.invoke(this, parameter);                           //Call the method, on this class and pass in the parameters.
 		
 		}else{                                                                                      //This method has not previsouly been called.  It needs to be found.
-			Method m = NetworkView.GetMethod(NetworkView.class, methodName, parameter.getClass());  //Find a reference to it.
+			Method m = NetworkView.GetMethod(this.getClass().getSuperclass(), methodName, parameter.getClass());  //Find a reference to it.
 			if(m == null){                                                                          //Make sure a method was found.
 				Debug.LogError("RPC tryed to call a method that does not exist");
 				return false;
@@ -65,8 +65,15 @@ public class NetworkView {
 	 * @param ID - The id of the client checking for ownership.
 	 * @return
 	 */
-	public boolean IsMine(int ID){
+	public boolean IsOwner(int ID){
 		return ID == ownerID;
+	}
+	
+	/**
+	 * @return ID - Check if the local client controlls this networkView.
+	 */
+	public boolean IsMine(){
+		return LocalClient.MY_ID == this.ownerID;
 	}
 	
 	/**
@@ -104,18 +111,21 @@ public class NetworkView {
 	 * @return
 	 */
 	public static Method GetMethod(Class<?> instanceClass, String methodName, Class<?>... parameterTypes) {
+//		Class<?> searchType = instanceClass;
+//		
+//		while (searchType != null) {
+//			Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
+//
+//	        for (Method method : methods) {
+//	        	if (methodName.equals(method.getName()) && (parameterTypes == null || Arrays.equals(parameterTypes, method.getParameterTypes()))) {
+//	        		return method;
+//	            }
+//	        }
+//	        searchType = searchType.getSuperclass();
+//		}
 		Class<?> searchType = instanceClass;
+		//searchType.getMethod(methodName);
 		
-		while (searchType != null) {
-			Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
-
-	        for (Method method : methods) {
-	        	if (methodName.equals(method.getName()) && (parameterTypes == null || Arrays.equals(parameterTypes, method.getParameterTypes()))) {
-	        		return method;
-	            }
-	        }
-	        searchType = searchType.getSuperclass();
-		}   
 
 	    return null;
 	}

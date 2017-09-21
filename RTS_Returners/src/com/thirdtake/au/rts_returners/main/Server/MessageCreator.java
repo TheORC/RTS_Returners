@@ -2,9 +2,9 @@ package com.thirdtake.au.rts_returners.main.Server;
 
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header.Builder;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageHeader;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
-import com.thirdtake.au.rts_returners.utils.Debug;
 
 public class MessageCreator {
 	

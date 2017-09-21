@@ -2,7 +2,7 @@ package com.thirdtake.au.rts_returners.main.Server;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.thirdtake.au.rts_returners.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
 
 public class MessageHandler {
 	

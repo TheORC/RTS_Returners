@@ -2,8 +2,12 @@ package com.thirdtake.au.rts_returners.main;
 
 import java.util.Scanner;
 
+import com.thirdtake.au.rts_returners.main.Server.LocalClient;
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
-import com.thirdtake.au.rts_returners.utils.Debug;
+import com.thirdtake.au.rts_returners.main.entities.Basic;
+import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
 
 /*
  * @Author: Oliver Clarke
@@ -22,19 +26,22 @@ public class Returners {
 		// TODO Auto-generated method stub
 		Debug.Log(BUILD_NAME + " Version: " + BUILD_ID + " starting...");
 		
-		ServerSocket socket = new ServerSocket("localhost", 8000);
 		
-		String input = "";
-		Scanner scanner = new Scanner(System.in);
-		while(!input.equalsIgnoreCase("q")){	
-			
-			input = scanner.nextLine().toLowerCase();
-			
-//			socket.SendTestRPC(input);
-		}
+		Basic b = (Basic) LocalClient.Instantiate(0, 1, Vector3PlaceHolder.Zero());
 		
-		scanner.close();
-		socket.StopServer();
+//		ServerSocket socket = new ServerSocket("localhost", 8000);
+//		
+//		String input = "";
+//		Scanner scanner = new Scanner(System.in);
+//		while(!input.equalsIgnoreCase("q")){	
+//			
+//			input = scanner.nextLine().toLowerCase();
+//			
+////			socket.SendTestRPC(input);
+//		}
+		
+		//scanner.close();
+		//socket.StopServer();
 		Stop();	
 	}
 	

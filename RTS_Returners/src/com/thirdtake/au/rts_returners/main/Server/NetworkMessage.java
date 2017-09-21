@@ -4,9 +4,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageHeader;
-import com.thirdtake.au.rts_returners.utils.Debug;
 
 /**
  * @author Oliver Clarke

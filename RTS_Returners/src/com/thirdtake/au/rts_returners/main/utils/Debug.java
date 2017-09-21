@@ -1,4 +1,4 @@
-package com.thirdtake.au.rts_returners.utils;
+package com.thirdtake.au.rts_returners.main.utils;
 
 public class Debug {
 	

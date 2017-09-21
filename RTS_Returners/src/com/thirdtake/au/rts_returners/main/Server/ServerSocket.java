@@ -7,7 +7,7 @@ import java.net.InetAddress;
 
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
-import com.thirdtake.au.rts_returners.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
 
 /**
  * @author Oliver

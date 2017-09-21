@@ -1,10 +1,13 @@
 package com.thirdtake.au.rts_returners.main.Server;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.thirdtake.au.rts_returners.utils.Debug;
+import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
+import com.thirdtake.au.rts_returners.main.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
 
 /**
  * @author Oliver Clarke
@@ -55,19 +58,73 @@ public class LocalClient {
 	/*
 	 * 
 	 */
-	public static void Instantiate(Class<?> object){
+	public static NetworkView Instantiate(int classID, int ownerID, Vector3PlaceHolder position){
+		
+		Debug.LogWarning("Add back in IS_ONLINE in (Instantiate LocalClient)");
+		
+//		if(!IS_ONLINE){
+//			Debug.LogWarning("Attempting to spawn a networkView while not online");
+//			return;
+//		}
+		
 		try {
-			NetworkView netView = (NetworkView) object.newInstance();
 			
+			EntityTypes eType = EntityTypes.GetFromID(classID); //Find the entity type
 			
+			//Make sure the entity to be spawned exists.
+			if(eType == null){
+				Debug.LogError("Attempted to spawn anentity which does not exist!");
+				return null;
+			}
 			
+			Debug.Log("Spawning: " + eType.toString());		
 			
+			Class<?> object = eType.GetEntityClass();               //Get a reference to its type
+			Object obj = object.newInstance();                      //Spawn the networkView.
+			NetworkView netView = (NetworkView)obj;
+			netView.SetOwnerID(ownerID);                            //Set the id of the networkView.
+			
+			/*
+			 * After spawning the network view, a number of things needs to happen.
+			 * First we need to add it to either otherNetViews or myNetViews.
+			 * Next we need to set its position
+			 */
+			
+			//This return true, if the local client instantiated the object.
+			if(netView.IsMine()){
+				//IF the local client spawned the object, we need to alert the server.
+				Debug.LogWarning("Still need to implement of sending spawn to the server!");
+			}else{
+				//We don't own this networkView meaning the server sent it to us.
+				//Add it to otherNetViews.
+				
+				List<NetworkView> views = null;
+				
+				if(!otherNetViews.containsKey(ownerID))                      //Check to see if this ID already has networkViews
+					otherNetViews.put(ownerID, new ArrayList<NetworkView>());//If not create a new instance.
+					
+				views = otherNetViews.get(ownerID);                          //Get the list
+				views.add(netView);                                          //Add the networkView
+				otherNetViews.put(ownerID, views);                           //Put the list back into the hashtable.
+			}
+			
+			/*
+			 * Handle logic regarding the netView, such as positions and stuff.
+			 */
+			try {
+				netView.CallRPC("SetPosition", position);
+			} catch (IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			
+			return netView; //Return the spaned networkView.
 			
 		} catch (InstantiationException | IllegalAccessException e) {
-			Debug.LogError("Attemtped to spawn a network object without a NetworkView!");
+			//Debug.LogError("Attemtped to spawn a network object without a NetworkView!");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
