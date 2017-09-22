@@ -9,11 +9,16 @@ public class Basic extends NetworkView {
 	public Vector3PlaceHolder m_position = Vector3PlaceHolder.Zero();
 
 	public void SetPosition(Vector3PlaceHolder position){
-		//Debug.Log("Position Changed!");
 		m_position = position;
+	}
+	
+	public void Say(String message){
+		Debug.Log(message);
 	}
 	
 	public void Die(){
 		Debug.Log("Entity( " + this.GetViewID() + ") died!");
 	}
+	
+	
 }

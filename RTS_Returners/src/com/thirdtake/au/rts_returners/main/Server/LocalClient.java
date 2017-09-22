@@ -79,7 +79,7 @@ public class LocalClient {
 				return null;
 			}
 			
-			Debug.Log("Spawning: " + eType.toString());		
+			//Debug.Log("Spawning: " + eType.toString());		
 			
 			Class<?> object = eType.GetEntityClass();               //Get a reference to its type
 			Object obj = object.newInstance();                      //Spawn the networkView.
@@ -118,7 +118,7 @@ public class LocalClient {
 				List<NetworkView> views = null;
 				
 				if(!otherNetViews.containsKey(ownerID)){                      //Check to see if this ID already has networkViews
-					Debug.Log("OtherNetViews does not contain owner.  Creating a reference to (" + ownerID + ").");
+					//Debug.Log("OtherNetViews does not contain owner.  Creating a reference to (" + ownerID + ").");
 					otherNetViews.put(ownerID, new ArrayList<NetworkView>()); //If not create a new instance.
 				}
 					
@@ -156,10 +156,7 @@ public class LocalClient {
 		
 		List<NetworkView> otherViews = otherNetViews.get(owernID);
 		
-		for(NetworkView view : otherViews) {
-			
-			Debug.Log("Owner (" + owernID + ") has netView with ID (" + view.GetViewID() + ")");
-			
+		for(NetworkView view : otherViews) {			
 			if(view.GetViewID() == viewID)
 				return view;
 		}

@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import com.thirdtake.au.rts_returners.main.Server.LocalClient;
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
+import com.thirdtake.au.rts_returners.main.entities.Basic;
 import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
 import com.thirdtake.au.rts_returners.main.utils.Debug;
 import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
@@ -27,18 +28,44 @@ public class Returners {
 		
 		ServerSocket socket = new ServerSocket("localhost", 8000);
 		
+		Basic bas = null;
+		
 		String input = "";
+		String[] commandArgs = new String[] {""};
 		Scanner scanner = new Scanner(System.in);
-		while(!input.equalsIgnoreCase("q")){	
-			input = scanner.nextLine().toLowerCase();
+		while(!commandArgs[0].equalsIgnoreCase("q")){	
 			
-			if(input.equalsIgnoreCase("b"))
-				LocalClient.Instantiate(EntityTypes.BASIC, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
-			if(input.equalsIgnoreCase("f"))
-				LocalClient.Instantiate(EntityTypes.FANCY, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
+			input = scanner.nextLine();
+			commandArgs = input.split(" ");
+			
+			if(commandArgs[0].equalsIgnoreCase("rpc")){
+				if(commandArgs.length > 1){
+					
+					String methodName = commandArgs[1];
+					
+					if(bas == null)
+						bas = (Basic)LocalClient.Instantiate(EntityTypes.BASIC, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
+					
+					if(commandArgs.length > 2){
+						
+						String message = "";
+						for(int i = 2; i < commandArgs.length; i++)
+							message += commandArgs[i] + " ";
+												
+						bas.ExecuteRPC(methodName, message);
+					}
+					else
+						bas.ExecuteRPC(commandArgs[1], null);
+					
+				}else{
+					Debug.LogWarning("RPC command takes 'rpc <method name> [optional parameter]'");
+				}
+			}else if(commandArgs[0].equalsIgnoreCase("new")){
+				bas = (Basic)LocalClient.Instantiate(EntityTypes.BASIC, LocalClient.MY_ID, Vector3PlaceHolder.Zero(), -1);
+			}
 		}
 		
-		scanner.close();
+		scanner.close();	
 		socket.StopServer();
 		Stop();	
 	}

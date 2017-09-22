@@ -28,7 +28,7 @@ public class MessageHandler {
 		
 		NetworkView view = LocalClient.GetOtherNetworkView(senderID, netViewID);
 		if(view == null){
-			Debug.LogWarning("Reeived an RPC for an networkView that does not exist!");
+			Debug.LogWarning("Received an RPC for an networkView that does not exist!");
 			return; //Exit.  We want nothing else to do with this.
 			        //There are a number of reasons that this might occur.
 			        //1) The server has not yet told us about this networkView.
@@ -49,6 +49,8 @@ public class MessageHandler {
 		if(message.GetMessage().getStringVarsCount() > 1){
 			param = message.GetMessage().getStringVars(1); //Remember that the the methodName  value is 0.
 		}
+		
+		//Debug.Log("Proccessing RPC: Sender ID (" + senderID + ") NetworkView ID (" + netViewID + ") Method Name (" + methodName + ").");
 		
 		//Debug.LogWarning("TODO: (MessagHandler) allow for the parsing of parameters into the RPC call");
 		view.ExecuteRPC(methodName, param);

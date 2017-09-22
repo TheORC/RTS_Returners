@@ -9,6 +9,7 @@ import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector;
 import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
 import com.thirdtake.au.rts_returners.main.utils.Debug;
+import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
 
 public class MessageCreator {
 
@@ -129,19 +130,12 @@ public class MessageCreator {
 	 *            Allows the attachment of any value.
 	 * @return
 	 */
-	public static byte[] CreateRPCMessage(MessageType messageType, String methodName, int viewID, Object parameter) {
+	public static byte[] CreateRPCMessage(String methodName, int viewID, Object parameter) {
 
 		// Create the basic message.
 		Message.Builder mBuilder = Message.newBuilder();
-
-		// Add the method to be called
-		if (messageType != MessageType.INSTANTIATE) {
-			mBuilder.addStringVars(methodName);// We do not need to include the
-												// method name if this is an
-												// INSTANTIATE call.
-			mBuilder.addIntVars(viewID); // Add the networkView ID so it can be
-											// found on the other clients.
-		}
+		mBuilder.addStringVars(methodName);// We do not need to include the
+		mBuilder.addIntVars(viewID); // Add the networkView ID so it can be found on the other clients.
 
 		if (parameter != null) { // We are sending a variable.
 			if (parameter instanceof Integer) { // See if the parameter is a
@@ -150,9 +144,14 @@ public class MessageCreator {
 			} else if (parameter instanceof String) { // See if the parameter is
 														// a string.
 				mBuilder.addStringVars((String) parameter);
-			} else if (parameter instanceof Vector) { // Set if the parameter is
-														// a vector.
-				mBuilder.addVectorVars((Vector) parameter);
+			} else if (parameter instanceof Vector3PlaceHolder) { // Set if the parameter is a vector.
+				
+				Vector.Builder vBuilder = Vector.newBuilder();
+				vBuilder.setX(((Vector3PlaceHolder)parameter).GetX());
+				vBuilder.setY(((Vector3PlaceHolder)parameter).GetY());
+				vBuilder.setZ(((Vector3PlaceHolder)parameter).GetZ());
+
+				mBuilder.addVectorVars(vBuilder.build());
 			} else {
 				Debug.LogError("Attempting to send an RPC with a parameter type that is not allowed!");
 				return null;
@@ -163,7 +162,7 @@ public class MessageCreator {
 
 		Header.Builder hBuilder = Header.newBuilder();
 		hBuilder.setMessageLength(messageBytes.length);
-		hBuilder.setMessageType(messageType);
+		hBuilder.setMessageType(MessageType.RPC);
 		hBuilder.setSenderID(LocalClient.MY_ID);
 		hBuilder.setErrorType(ErrorType.SUCCESS);
 
@@ -175,10 +174,9 @@ public class MessageCreator {
 		byte[] messageHeaderBytes = mhBuilder.build().toByteArray();
 
 		byte[] finalMessage = new byte[messageBytes.length + headerBytes.length + messageHeaderBytes.length];
-		System.arraycopy(messageHeaderBytes, 0, finalMessage, 0, finalMessage.length);
+		System.arraycopy(messageHeaderBytes, 0, finalMessage, 0, messageHeaderBytes.length);
 		System.arraycopy(headerBytes, 0, finalMessage, messageHeaderBytes.length, headerBytes.length);
-		System.arraycopy(messageBytes, 0, finalMessage, messageHeaderBytes.length + headerBytes.length,
-				messageBytes.length);
+		System.arraycopy(messageBytes, 0, finalMessage, messageHeaderBytes.length + headerBytes.length, messageBytes.length);
 
 		return finalMessage;
 	}

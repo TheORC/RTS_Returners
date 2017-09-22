@@ -28,45 +28,48 @@ public class NetworkView {
 	private Hashtable<String, Method> rpcMethods = new Hashtable<>(); //Table containing references to previously called rpcs.
 																	  //This is done to minimalize the use of reflections.
 
-	public NetworkView(){
-		
-	}
+	public NetworkView(){ }
 	
 	/**
 	 * @param methodName  The name of the method being called
 	 * @param parameter   The parameters the method takes
-	 * @return            This method return true if the method is called sucsefully, and false it it failed.
+	 * @return            This method return true if the method is called successfully, and false it it failed.
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
 	public boolean ExecuteRPC(String methodName, Object parameter) {
 		try{
-			if(rpcMethods.containsKey(methodName)){                  //Check to see if the method has already been hashed.
-				Method m = rpcMethods.get(methodName);               //If so grab it.
-				m.invoke(this, parameter);                           //Call the method, on this class and pass in the parameters.
-			
-			}else{   
-				                                                                                        //This method has not previously been called.  It needs to be found.
-				Method m = null;
+			if(!IsMine()){ //If this is not mine, call RPC.
+				if(rpcMethods.containsKey(methodName)){                  //Check to see if the method has already been hashed.
+					Method m = rpcMethods.get(methodName);               //If so grab it.
+					m.invoke(this, parameter);                           //Call the method, on this class and pass in the parameters.
 				
-				if(parameter == null){
-					m = NetworkView.GetMethod(this.getClass(), methodName);    //Find a reference to it.
-				}else{
-					m = NetworkView.GetMethod(this.getClass(), methodName, parameter.getClass());
-				}	
-						
-				if(m == null){                                                                          //Make sure a method was found.
-					Debug.LogError("RPC tryed to call a method that does not exist");
-					return false;
+				}else{   
+					                                                                                        //This method has not previously been called.  It needs to be found.
+					Method m = null;
+					
+					if(parameter == null){
+						m = NetworkView.GetMethod(this.getClass(), methodName);    //Find a reference to it.
+					}else{
+						m = NetworkView.GetMethod(this.getClass(), methodName, parameter.getClass());
+					}	
+							
+					if(m == null){                                                                          //Make sure a method was found.
+						Debug.LogError("RPC tryed to call a method that does not exist");
+						return false;
+					}
+					
+					//The method was successfully found.  Store it.
+					rpcMethods.put(methodName, m);                 //Add the method to the HashTable.
+					if(parameter != null)
+						m.invoke(this, parameter);                     //Call the method.
+					else
+						m.invoke(this);
 				}
-				
-				//The method was successfully found.  Store it.
-				rpcMethods.put(methodName, m);                 //Add the method to the HashTable.
-				if(parameter != null)
-					m.invoke(this, parameter);                     //Call the method.
-				else
-					m.invoke(this);
+			}else{  //This is mine.  Send it to the server.
+				byte[] rpcMessage = MessageCreator.CreateRPCMessage(methodName, this.GetViewID(), parameter);
+				ServerSocket.Instance.SendMessage(rpcMessage);
 			}
 		}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
 			e.printStackTrace();
