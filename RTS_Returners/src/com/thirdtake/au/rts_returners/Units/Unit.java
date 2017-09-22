@@ -66,4 +66,12 @@ public class Unit extends BoundaryBox{
 	public void setDestination(Vector _destination) {
 		destination = _destination;
 	}
+
+	public UnitTypes getType() {
+		return this.type;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

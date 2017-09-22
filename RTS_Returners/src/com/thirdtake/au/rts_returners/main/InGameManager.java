@@ -1,10 +1,11 @@
 package com.thirdtake.au.rts_returners.main;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.plaf.SliderUI;
 
 import com.Tylabobaid.Centaur.Collisions.BoundaryBox;
 import com.Tylabobaid.Centaur.Events.Button;
@@ -17,6 +18,7 @@ import com.thirdtake.au.rts_returners.Buildings.Base;
 import com.thirdtake.au.rts_returners.Buildings.Building;
 import com.thirdtake.au.rts_returners.Units.Unit;
 import com.thirdtake.au.rts_returners.enums.TileTypes;
+import com.thirdtake.au.rts_returners.enums.UnitTypes;
 import com.thirdtake.au.rts_returners.map.Tile;
 
 public class InGameManager {
@@ -345,7 +347,6 @@ public class InGameManager {
 						selectedUnits.clear();
 					}
 					
-					int a;
 					for(int i = 0; i < localPlayerUnits.size(); i++){
 						if(selectedRectangle.hitCheck(localPlayerUnits.get(i).getPosition())){
 							
@@ -409,6 +410,13 @@ public class InGameManager {
 				tiles[x][y].tickBuilding();
 			}
 		}
+		
+//		if(selectedUnits.size() >= 1){
+//			if(selectedUnitsSame()){
+//				
+//			}
+//		}
+		int a;
 		
 		if(selectedTileX >= 0 && selectedTileX < tiles.length && selectedTileY >= 0 && selectedTileY < tiles[0].length){
 			if(tiles[selectedTileX][selectedTileY].getContainsBuilding() && tiles[selectedTileX][selectedTileY].getBuilding() != null){
@@ -774,10 +782,7 @@ public class InGameManager {
 				bottomBorder - topBorder - 2);
 
 		GraphicsEngine.renderImage(mapImage, hudX, hudY, mapSize * minimapScale, mapSize * minimapScale); // Draws
-																											// the
-																											// map
-																											// image
-
+		
 		for(int i = 0; i < localPlayerUnits.size(); i ++){
 			int x = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getX()/tileSize)*minimapScale));
 			int y = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getY()/tileSize)*minimapScale));
@@ -858,6 +863,18 @@ public class InGameManager {
 						button9.render();
 					}
 				}
+				
+				if(selectedUnits.size() >= 1){
+					button1.render();
+					button2.render();
+					button3.render();
+					button4.render();
+					button5.render();
+					button6.render();
+					button7.render();
+					button8.render();
+					button9.render();
+				}
 			}
 		}
 		
@@ -879,6 +896,20 @@ public class InGameManager {
 		GraphicsEngine.setColor(new Color(0,0,0));
 		GraphicsEngine.outLineRect((int) (selectedRectangle.rect.x-cameraOffset.getX()+displayCorner.getX()),(int) (selectedRectangle.rect.y-cameraOffset.getY()+displayCorner.getY()), selectedRectangle.rect.width,(int) selectedRectangle.rect.height);
 
+		for(int i = 0; i < localPlayerUnits.size(); i ++){
+			if(localPlayerUnits.get(i).hitCheck(realMousePos)){
+				GraphicsEngine.setColor(new Color(100,100,100,100));
+				GraphicsEngine.rect(MouseInput.getMouseX(), MouseInput.getMouseY(), 170, 60);
+				
+				GraphicsEngine.setColor(new Color(255,255,255));
+				GraphicsEngine.textSize(20);
+				GraphicsEngine.text(localPlayerUnits.get(i).getName(), MouseInput.getMouseX()+10, MouseInput.getMouseY()+30);
+				GraphicsEngine.setColor(new Color(0,0,0));
+				GraphicsEngine.rect(MouseInput.getMouseX()+10, MouseInput.getMouseY()+40, 150, 10);
+				GraphicsEngine.setColor(new Color(255,0,0));
+				GraphicsEngine.rect(MouseInput.getMouseX()+10, MouseInput.getMouseY()+40, (150*localPlayerUnits.get(i).getHealth())/localPlayerUnits.get(i).getMaxHealth(), 10);
+			}
+		}
 	}
 
 	public void setMouseBuilding(Building _building) {
@@ -898,5 +929,18 @@ public class InGameManager {
 				}
 			}
 		}
+	}
+	
+	public boolean selectedUnitsSame(){
+		UnitTypes type = localPlayerUnits.get(selectedUnits.get(0)).getType();
+		boolean b = true;
+		
+		for(int i = 0; i < selectedUnits.size(); i ++){
+			if(localPlayerUnits.get(selectedUnits.get(i)).getType() != type){
+				b = false;
+			}
+		}
+		
+		return b;
 	}
 }
