@@ -1,10 +1,12 @@
 package com.thirdtake.au.rts_returners.main;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.Tylabobaid.Centaur.Collisions.BoundaryBox;
 import com.Tylabobaid.Centaur.Events.Button;
 import com.Tylabobaid.Centaur.Events.Keyinput;
 import com.Tylabobaid.Centaur.Events.MouseInput;
@@ -71,6 +73,13 @@ public class InGameManager {
 	public List<Unit> localPlayerUnits = new ArrayList<Unit>();
 	public List<Integer> selectedUnits = new ArrayList<Integer>();
 	
+	Vector previouseMousePosition = new Vector();
+	boolean previouseClicked;
+	BoundaryBox selectedRectangle = new BoundaryBox();
+	
+	Vector selectedPoint = new Vector();
+	Vector selectedSize = new Vector();
+	
 	private Button button1 = new Button(10, 220 + (minimapScale * mapSize), 50, 50, "", new Color(255, 255, 255),
 			new Color(100, 100, 100));
 	private Button button2 = new Button(70, 220 + (minimapScale * mapSize), 50, 50, "", new Color(255, 255, 255),
@@ -93,8 +102,9 @@ public class InGameManager {
 			new Color(100, 100, 100));
 
 	private Building mouseBuilding = null;
-
+	
 	public InGameManager() {
+		
 		noise = new PerlinNoise(mapSeed); // initialises the Perlin Noise Used
 		tiles = newMap(mapSize, mapSize); // generates the map
 
@@ -217,6 +227,8 @@ public class InGameManager {
 
 			}
 		}
+		
+		selectedRectangle.setup(0, 0, 0, 0);
 	}
 
 	private Tile[][] newMap(int w, int h) {
@@ -286,6 +298,72 @@ public class InGameManager {
 				}
 			}
 		}
+		
+		if(mouseInsideWindow()){
+//			selectedRectangle.setup(0, 0, 0, 0);
+			
+//			creatingRectangle = false;
+			
+			int xpos = 0;
+			int ypos = 0;
+			int width = 0;
+			int height = 0;
+			
+			if(previouseClicked && MouseInput.leftClick()){
+	//			System.out.println("held");
+				int x = (int) (realMousePos.getX()-selectedPoint.getX());
+				int y = (int) (realMousePos.getY()-selectedPoint.getY());
+				selectedSize = new Vector(x, y);
+				
+				if(selectedSize.getX() < 0){
+					xpos = (int) (selectedPoint.getX()+selectedSize.getX());
+				}else{
+					xpos = (int) (selectedPoint.getX());
+				}
+				if(selectedSize.getY() < 0){
+					ypos = (int) (selectedPoint.getY()+selectedSize.getY());
+				}else{
+					ypos = (int) (selectedPoint.getY());
+				}
+				
+				width = (int) Math.abs(selectedSize.getX());
+				height = (int) Math.abs(selectedSize.getY());
+				
+				selectedRectangle.setup(xpos, ypos, width, height);
+			}
+			if(!previouseClicked && MouseInput.leftClick()){
+	//			System.out.println("Clicked");
+				previouseMousePosition = realMousePos;
+				selectedPoint = new Vector((int) realMousePos.getX(),(int) realMousePos.getY());
+			}
+			
+			if(previouseMousePosition.getX() != realMousePos.getX() || previouseMousePosition.getY() != realMousePos.getY()){
+				if(previouseClicked && !MouseInput.leftClick()){
+					System.out.println("bu");
+					// System.out.println("Released");
+					if(!Keyinput.getkey(16) && !Keyinput.getkey(17)){
+						selectedUnits.clear();
+					}
+					
+					int a;
+					for(int i = 0; i < localPlayerUnits.size(); i++){
+						if(selectedRectangle.hitCheck(localPlayerUnits.get(i).getPosition())){
+							
+							selectedTileX = -1;
+							selectedTileY = -1;
+							
+							selectedUnits.add(i);
+							
+							sanitiseSelectedUnits();
+						}
+					}
+					
+					selectedRectangle.setup(0, 0, 0, 0);
+				}
+			}
+			
+			previouseClicked = MouseInput.leftClick();
+		}
 	}
 
 	private void tickTiles() {
@@ -302,10 +380,12 @@ public class InGameManager {
 				}
 			} else {
 				if(tiles[highlightedTileX][highlightedTileY].getContainsBuilding()){
-					selectedTileX = highlightedTileX;
-					selectedTileY = highlightedTileY;
-					
-					selectedUnits.clear();
+					if(previouseMousePosition.getX() == realMousePos.getX() && previouseMousePosition.getY() == realMousePos.getY()){
+						selectedTileX = highlightedTileX;
+						selectedTileY = highlightedTileY;
+						
+						selectedUnits.clear();
+					}
 				}
 			}
 		}
@@ -318,6 +398,9 @@ public class InGameManager {
 
 		if (Keyinput.getkey(27)) { // ESC
 			mouseBuilding = null;
+			selectedTileX = -1;
+			selectedTileY = -1;
+			
 			selectedUnits.clear();
 		}
 
@@ -694,7 +777,7 @@ public class InGameManager {
 																											// the
 																											// map
 																											// image
-		int a;
+
 		for(int i = 0; i < localPlayerUnits.size(); i ++){
 			int x = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getX()/tileSize)*minimapScale));
 			int y = (int) Math.floor(((localPlayerUnits.get(i).getPosition().getY()/tileSize)*minimapScale));
@@ -790,7 +873,12 @@ public class InGameManager {
 
 			}
 		}
-		
+		GraphicsEngine.setColor(new Color(0,255,0, 100));
+		GraphicsEngine.rect((int) (selectedRectangle.rect.x-cameraOffset.getX()+displayCorner.getX()),(int) (selectedRectangle.rect.y-cameraOffset.getY()+displayCorner.getY()), selectedRectangle.rect.width,(int) selectedRectangle.rect.height);
+
+		GraphicsEngine.setColor(new Color(0,0,0));
+		GraphicsEngine.outLineRect((int) (selectedRectangle.rect.x-cameraOffset.getX()+displayCorner.getX()),(int) (selectedRectangle.rect.y-cameraOffset.getY()+displayCorner.getY()), selectedRectangle.rect.width,(int) selectedRectangle.rect.height);
+
 	}
 
 	public void setMouseBuilding(Building _building) {

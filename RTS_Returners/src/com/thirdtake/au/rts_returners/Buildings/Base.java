@@ -18,7 +18,6 @@ public class Base extends Building{
 	
 	@Override
 	public void action1(){
-		System.out.println(getName());
-		Manager.inGameManager.localPlayerUnits.add(new WorkerUnit(new Vector(position.getX(), position.getY()), new Vector(position.getX()+1, position.getY()+25)));
+		Manager.inGameManager.localPlayerUnits.add(new WorkerUnit(new Vector(position.getX(), position.getY()), new Vector((float) (position.getX()+(100*Math.random())-50), (float) (position.getY()+(100*Math.random())-50))));
 	}
 }
