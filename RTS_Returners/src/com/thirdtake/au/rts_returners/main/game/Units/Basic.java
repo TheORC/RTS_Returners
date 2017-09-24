@@ -19,6 +19,4 @@ public class Basic extends NetworkView {
 	public void Die(){
 		Debug.Log("Entity( " + this.GetViewID() + ") died!");
 	}
-	
-	
 }

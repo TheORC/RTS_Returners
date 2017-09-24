@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import com.Tylabobaid.Centaur.Collisions.BoundaryBox;
 import com.thirdtake.au.rts_returners.main.Utils.Debug;
 import com.thirdtake.au.rts_returners.main.Utils.Stack;
 
@@ -19,10 +18,8 @@ import com.thirdtake.au.rts_returners.main.Utils.Stack;
  *   Every client is responsible for setting the networkID for each of their
  *   networkViews.
  */
-public class NetworkView extends BoundaryBox {
+public class NetworkView {
 	
-	private static final long serialVersionUID = 1L;
-
 	public static Stack<Integer> newNetworkIDS = null; //Set the limit to only 100 networkViews.
 	
 	private int networkID = -1; //By default all network ids are -1.
