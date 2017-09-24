@@ -1,6 +1,6 @@
 package com.thirdtake.au.rts_returners.main.Server;
 
-import com.thirdtake.au.rts_returners.main.utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
 
 public class MessageHandler {
 	

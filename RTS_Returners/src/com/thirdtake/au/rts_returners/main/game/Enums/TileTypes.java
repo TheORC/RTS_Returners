@@ -1,4 +1,4 @@
-package com.thirdtake.au.rts_returners.enums
+package com.thirdtake.au.rts_returners.main.game.Enums
 ;
 
 public enum TileTypes {

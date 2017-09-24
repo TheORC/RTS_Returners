@@ -1,8 +1,8 @@
-package com.thirdtake.au.rts_returners.main.entities;
+package com.thirdtake.au.rts_returners.main.game.Entities;
 
 import com.thirdtake.au.rts_returners.main.Server.NetworkView;
-import com.thirdtake.au.rts_returners.main.utils.Debug;
-import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
 
 public class Basic extends NetworkView {
 

@@ -1,8 +1,8 @@
-package com.thirdtake.au.rts_returners.map;
+package com.thirdtake.au.rts_returners.main.game.Map;
 
 import com.Tylabobaid.Centaur.Main.Vector;
-import com.thirdtake.au.rts_returners.Buildings.Building;
-import com.thirdtake.au.rts_returners.enums.TileTypes;
+import com.thirdtake.au.rts_returners.main.game.Buildings.Building;
+import com.thirdtake.au.rts_returners.main.game.Enums.TileTypes;
 
 public class Tile {
 	TileTypes type;

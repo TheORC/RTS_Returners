@@ -1,4 +1,4 @@
-package com.thirdtake.au.rts_returners.main;
+package com.thirdtake.au.rts_returners.main.game;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -14,12 +14,12 @@ import com.Tylabobaid.Centaur.Events.MouseInput;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.PerlinNoise;
 import com.Tylabobaid.Centaur.Main.Vector;
-import com.thirdtake.au.rts_returners.Buildings.Base;
-import com.thirdtake.au.rts_returners.Buildings.Building;
-import com.thirdtake.au.rts_returners.Units.Unit;
-import com.thirdtake.au.rts_returners.enums.TileTypes;
-import com.thirdtake.au.rts_returners.enums.UnitTypes;
-import com.thirdtake.au.rts_returners.map.Tile;
+import com.thirdtake.au.rts_returners.main.game.Buildings.Base;
+import com.thirdtake.au.rts_returners.main.game.Buildings.Building;
+import com.thirdtake.au.rts_returners.main.game.Enums.TileTypes;
+import com.thirdtake.au.rts_returners.main.game.Enums.UnitTypes;
+import com.thirdtake.au.rts_returners.main.game.Map.Tile;
+import com.thirdtake.au.rts_returners.main.game.Units.Unit;
 
 public class InGameManager {
 	private Tile[][] tiles; // 2D array that contains the tiles on the current

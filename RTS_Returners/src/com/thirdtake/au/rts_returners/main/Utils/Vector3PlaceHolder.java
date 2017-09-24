@@ -1,4 +1,4 @@
-package com.thirdtake.au.rts_returners.main.utils;
+package com.thirdtake.au.rts_returners.main.Utils;
 
 public class Vector3PlaceHolder {
 	

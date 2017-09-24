@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import com.thirdtake.au.rts_returners.main.utils.Debug;
-import com.thirdtake.au.rts_returners.main.utils.Stack;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Stack;
 
 /**
  * @author Oliver Clarke

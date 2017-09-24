@@ -6,7 +6,9 @@ import java.awt.Color;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.Game;
 import com.Tylabobaid.Centaur.Main.Main;
-import com.thirdtake.au.rts_returners.enums.GameStates;
+import com.thirdtake.au.rts_returners.main.Utils.Images;
+import com.thirdtake.au.rts_returners.main.game.InGameManager;
+import com.thirdtake.au.rts_returners.main.game.Enums.GameStates;
 
 public class Manager extends Main{ //This Class must extend Manager
 	

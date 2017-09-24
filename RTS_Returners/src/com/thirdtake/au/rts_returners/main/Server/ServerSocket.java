@@ -8,9 +8,9 @@ import java.net.InetAddress;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector;
-import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
-import com.thirdtake.au.rts_returners.main.utils.Debug;
-import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.game.Entities.EntityTypes;
 
 /**
  * @author Oliver

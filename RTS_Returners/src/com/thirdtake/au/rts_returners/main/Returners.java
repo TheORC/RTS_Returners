@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 import com.thirdtake.au.rts_returners.main.Server.LocalClient;
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
-import com.thirdtake.au.rts_returners.main.entities.Basic;
-import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
-import com.thirdtake.au.rts_returners.main.utils.Debug;
-import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.game.Entities.Basic;
+import com.thirdtake.au.rts_returners.main.game.Entities.EntityTypes;
 
 /*
  * @Author: Oliver Clarke

@@ -3,13 +3,13 @@ package com.thirdtake.au.rts_returners.main.Server;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.ErrorType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Header.Builder;
+import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
+import com.thirdtake.au.rts_returners.main.game.Entities.EntityTypes;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Message;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageHeader;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.MessageType;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector;
-import com.thirdtake.au.rts_returners.main.entities.EntityTypes;
-import com.thirdtake.au.rts_returners.main.utils.Debug;
-import com.thirdtake.au.rts_returners.main.utils.Vector3PlaceHolder;
 
 public class MessageCreator {
 
