@@ -3,7 +3,6 @@ package com.thirdtake.au.rts_returners.main;
 
 import java.awt.Color;
 
-import com.Tylabobaid.Centaur.Events.Keyinput;
 import com.Tylabobaid.Centaur.Graphics.GraphicsEngine;
 import com.Tylabobaid.Centaur.Main.Game;
 import com.Tylabobaid.Centaur.Main.Main;
