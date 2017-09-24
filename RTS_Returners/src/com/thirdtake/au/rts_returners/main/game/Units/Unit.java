@@ -1,13 +1,12 @@
 package com.thirdtake.au.rts_returners.main.game.Units;
 
-import java.awt.Rectangle;
-
 import com.Tylabobaid.Centaur.Collisions.BoundaryBox;
-import com.Tylabobaid.Centaur.Collisions.circleCollision;
 import com.Tylabobaid.Centaur.Main.Vector;
 import com.thirdtake.au.rts_returners.main.game.Enums.UnitTypes;
 
-public class Unit extends BoundaryBox{
+@SuppressWarnings("serial")
+public class Unit extends BoundaryBox {
+	
 	private UnitTypes type;
 	private int movementSpeed = 1;
 	private int damage = 1;
@@ -51,6 +50,42 @@ public class Unit extends BoundaryBox{
 		}
 	}
 
+	/**
+	 * @return  Gets the attack damage of the unit.
+	 */
+	public int GetAttackDamage(){
+		return damage;
+	}
+	
+	/**
+	 * @return  Gets the attack cool down of the unit.
+	 */
+	public int GetAttackCoolDown(){
+		return attackCooldown;
+	}
+	
+	/**
+	 * @return  Gets the attack range of the unit.
+	 */
+	public int GetAttackRange(){
+		return attackRange;
+	}
+	
+	/**
+	 * @return  Tells if the unit can attack while moving.
+	 */
+	public boolean IsAttaceMove(){
+		return attackMoving;
+	}
+	
+	/**
+	 * @return  Tells if the unit is currently attacking.
+	 */
+	public boolean IsAttacking(){
+		return attacking;
+	}
+	
+	
 	public Vector getPosition() {
 		return position;
 	}

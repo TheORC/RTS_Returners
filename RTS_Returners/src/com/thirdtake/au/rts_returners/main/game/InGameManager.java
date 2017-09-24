@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.SliderUI;
-
 import com.Tylabobaid.Centaur.Collisions.BoundaryBox;
 import com.Tylabobaid.Centaur.Events.Button;
 import com.Tylabobaid.Centaur.Events.Keyinput;
@@ -416,7 +414,7 @@ public class InGameManager {
 //				
 //			}
 //		}
-		int a;
+		//int a;
 		
 		if(selectedTileX >= 0 && selectedTileX < tiles.length && selectedTileY >= 0 && selectedTileY < tiles[0].length){
 			if(tiles[selectedTileX][selectedTileY].getContainsBuilding() && tiles[selectedTileX][selectedTileY].getBuilding() != null){

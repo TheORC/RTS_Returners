@@ -6,8 +6,8 @@ import com.thirdtake.au.rts_returners.main.Server.LocalClient;
 import com.thirdtake.au.rts_returners.main.Server.ServerSocket;
 import com.thirdtake.au.rts_returners.main.Utils.Debug;
 import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
-import com.thirdtake.au.rts_returners.main.game.Entities.Basic;
-import com.thirdtake.au.rts_returners.main.game.Entities.EntityTypes;
+import com.thirdtake.au.rts_returners.main.game.Enums.EntityTypes;
+import com.thirdtake.au.rts_returners.main.game.Units.Basic;
 
 /*
  * @Author: Oliver Clarke

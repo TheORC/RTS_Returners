@@ -7,7 +7,7 @@ import java.util.List;
 import com.thirdtake.au.rts_returners.main.Server.NetMessage.Vector;
 import com.thirdtake.au.rts_returners.main.Utils.Debug;
 import com.thirdtake.au.rts_returners.main.Utils.Vector3PlaceHolder;
-import com.thirdtake.au.rts_returners.main.game.Entities.EntityTypes;
+import com.thirdtake.au.rts_returners.main.game.Enums.EntityTypes;
 
 /**
  * @author Oliver Clarke

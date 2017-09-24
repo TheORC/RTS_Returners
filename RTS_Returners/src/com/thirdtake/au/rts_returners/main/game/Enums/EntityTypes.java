@@ -1,6 +1,8 @@
-package com.thirdtake.au.rts_returners.main.game.Entities;
+package com.thirdtake.au.rts_returners.main.game.Enums;
 
 import com.thirdtake.au.rts_returners.main.Utils.Debug;
+import com.thirdtake.au.rts_returners.main.game.Units.Basic;
+import com.thirdtake.au.rts_returners.main.game.Units.Fancy;
 
 public enum EntityTypes {
 	

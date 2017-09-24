@@ -580,7 +580,8 @@ public final class NetMessage {
       return result;
     }
 
-    @java.lang.Override
+    @SuppressWarnings("unchecked")
+	@java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -761,7 +762,8 @@ public final class NetMessage {
 
       public com.thirdtake.au.rts_returners.main.Server.NetMessage.Message buildPartial() {
         com.thirdtake.au.rts_returners.main.Server.NetMessage.Message result = new com.thirdtake.au.rts_returners.main.Server.NetMessage.Message(this);
-        int from_bitField0_ = bitField0_;
+        @SuppressWarnings("unused")
+		int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           intVars_ = java.util.Collections.unmodifiableList(intVars_);
           bitField0_ = (bitField0_ & ~0x00000001);
@@ -1383,7 +1385,8 @@ public final class NetMessage {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1492,7 +1495,8 @@ public final class NetMessage {
       return result;
     }
 
-    @java.lang.Override
+    @SuppressWarnings("unchecked")
+	@java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -1897,7 +1901,8 @@ public final class NetMessage {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -2109,7 +2114,8 @@ public final class NetMessage {
       return result;
     }
 
-    @java.lang.Override
+    @SuppressWarnings("unchecked")
+	@java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -2666,7 +2672,8 @@ public final class NetMessage {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      @SuppressWarnings("unused")
+	int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -2817,7 +2824,8 @@ public final class NetMessage {
       return result;
     }
 
-    @java.lang.Override
+    @SuppressWarnings("unchecked")
+	@java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;

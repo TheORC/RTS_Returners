@@ -1,4 +1,4 @@
-package com.thirdtake.au.rts_returners.main.game.Entities;
+package com.thirdtake.au.rts_returners.main.game.Units;
 
 import com.thirdtake.au.rts_returners.main.Server.NetworkView;
 import com.thirdtake.au.rts_returners.main.Utils.Debug;
